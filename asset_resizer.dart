@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:image/image.dart';
 
 const assetPath = 'assets/images';
@@ -18,22 +19,31 @@ void resizeAndSave(File imageFile, double scale) {
   if (img == null) return;
   final newWidth = (img.width * scale).round();
   final newHeight = (img.height * scale).round();
-  final resized = copyResize(img, width: newWidth, height: newHeight, interpolation: Interpolation.average);
+  final resized = copyResize(
+    img,
+    width: newWidth,
+    height: newHeight,
+    interpolation: Interpolation.average,
+  );
   File(outputPath).writeAsBytesSync(encodePng(resized));
-  print('Saved: $outputPath');
+  debugPrint('Saved: $outputPath');
 }
 
 void main() {
   final dir = Directory(assetPath);
   if (!dir.existsSync()) {
-    print('assets/images klasörü bulunamadı!');
+    debugPrint('assets/images folder not found!');
     return;
   }
   for (final entity in dir.listSync()) {
-    if (entity is File && (entity.path.endsWith('.png') || entity.path.endsWith('.jpg') || entity.path.endsWith('.jpeg') || entity.path.endsWith('.webp'))) {
+    if (entity is File &&
+        (entity.path.endsWith('.png') ||
+            entity.path.endsWith('.jpg') ||
+            entity.path.endsWith('.jpeg') ||
+            entity.path.endsWith('.webp'))) {
       for (final scale in scales) {
         resizeAndSave(entity, scale);
       }
     }
   }
-} 
+}
