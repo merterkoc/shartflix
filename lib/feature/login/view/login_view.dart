@@ -6,7 +6,6 @@ import 'package:shartflix/core/widget/text_field/app_text_field.dart';
 import 'package:shartflix/feature/login/bloc/user_bloc.dart';
 import 'package:shartflix/feature/login/widget/login_logo_row.dart';
 import 'package:shartflix/feature/login/widget/register_prompt.dart';
-import 'package:shartflix/repository/user_repository.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class LoginView extends StatefulWidget {
@@ -29,109 +28,106 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => UserBloc(userRepository: UserRepository()),
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.paddingXLarge,
-          ),
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  context.l10n.login_view_title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.paddingXLarge,
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                context.l10n.login_view_title,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                Text(
-                  context.l10n.login_view_subtitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 46),
-                AppTextField(
-                  controller: _emailController,
-                  hintText: context.l10n.login_view_email_hint,
-                  prefixIcon: const Icon(FontAwesomeIcons.envelope),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 16),
-                AppPasswordField(
-                  controller: _passwordController,
-                  hintText: context.l10n.login_view_password_hint,
-                ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.secondary,
-                      surfaceTintColor: Theme.of(context).colorScheme.secondary,
-                      overlayColor: Colors.transparent,
-                      textStyle: const TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 14,
-                      ),
+              ),
+              Text(
+                context.l10n.login_view_subtitle,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: 46),
+              AppTextField(
+                controller: _emailController,
+                hintText: context.l10n.login_view_email_hint,
+                prefixIcon: const Icon(FontAwesomeIcons.envelope),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+              AppPasswordField(
+                controller: _passwordController,
+                hintText: context.l10n.login_view_password_hint,
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () {},
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.secondary,
+                    surfaceTintColor: Theme.of(context).colorScheme.secondary,
+                    overlayColor: Colors.transparent,
+                    textStyle: const TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 14,
                     ),
-                    child: Text(context.l10n.login_view_forgot_password),
                   ),
+                  child: Text(context.l10n.login_view_forgot_password),
                 ),
-                const SizedBox(height: 16),
-                BlocBuilder<UserBloc, UserState>(
-                  builder: (context, state) {
-                    if (state is UserLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return AppButton.primary(
-                      text: context.l10n.login_view_login_button,
-                      width: double.infinity,
-                      onPressed: () {
-                        final email = _emailController.text.trim();
-                        final password = _passwordController.text.trim();
-                        context.read<UserBloc>().add(
-                          LoginRequested(email: email, password: password),
-                        );
-                      },
+              ),
+              const SizedBox(height: 16),
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  if (state is UserLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return AppButton.primary(
+                    text: context.l10n.login_view_login_button,
+                    width: double.infinity,
+                    onPressed: () {
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+                      context.read<UserBloc>().add(
+                        LoginRequested(email: email, password: password),
+                      );
+                    },
+                  );
+                },
+              ),
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  if (state is UserFailure) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
                     );
-                  },
-                ),
-                BlocBuilder<UserBloc, UserState>(
-                  builder: (context, state) {
-                    if (state is UserFailure) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          state.message,
-                          style: const TextStyle(color: Colors.red),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-                    if (state is UserLoginSuccess) {
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text(
-                          'Login successful!',
-                          style: TextStyle(color: Colors.green),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                const SizedBox(height: 24),
-                const LoginLogoRow(),
-                const SizedBox(height: 20),
-                const RegisterPrompt(),
-              ],
-            ),
+                  }
+                  if (state is UserLoginSuccess) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Text(
+                        'Login successful!',
+                        style: TextStyle(color: Colors.green),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+              const SizedBox(height: 24),
+              const LoginLogoRow(),
+              const SizedBox(height: 20),
+              const RegisterPrompt(),
+            ],
           ),
         ),
       ),

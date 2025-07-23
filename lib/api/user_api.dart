@@ -59,4 +59,10 @@ class UserApi extends ApiProvider {
       cancelToken: cancelToken,
     );
   }
+
+  void logoutSession({
+    CancelToken? cancelToken,
+  })  {
+     logout();
+  }
 }

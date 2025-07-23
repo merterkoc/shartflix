@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shartflix/core/router/authentication_listener.dart';
 
 class ShellView extends StatefulWidget {
   const ShellView({required this.child, super.key});
@@ -19,7 +20,7 @@ class _ShellViewState extends State<ShellView>
   @override
   void initState() {
     super.initState();
-
+    AuthenticationRouterListener.listen();
     WidgetsBinding.instance.addObserver(this);
   }
 

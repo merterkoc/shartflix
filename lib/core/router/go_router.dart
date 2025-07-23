@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shartflix/core/router/shell_view/shell_view.dart';
+import 'package:shartflix/feature/home/view/home_view.dart';
 import 'package:shartflix/feature/login/view/login_view.dart';
 import 'package:shartflix/feature/not_found/view/not_found_view.dart';
 import 'package:shartflix/feature/register/view/register_view.dart';
@@ -22,7 +23,8 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 enum AppRoute {
   notFound(path: '*', full: '/notFound'),
   register(path: '/register', full: '/register'),
-  login(path: '/login', full: '/login');
+  login(path: '/login', full: '/login'),
+  home(path: '/home', full: '/home');
 
   const AppRoute({required this.path, this.full});
 
@@ -39,7 +41,7 @@ class AppRouter {
 
   final GoRouter _goRouter = GoRouter(
     debugLogDiagnostics: kDebugMode,
-    initialLocation: '/login',
+    initialLocation: '/',
     navigatorKey: rooterNavigatorKey,
     observers: [routeObserver],
     routes: [
@@ -75,6 +77,15 @@ class AppRouter {
               key: state.pageKey,
               name: state.name,
               child: const LoginView(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoute.home.path,
+            name: AppRoute.home.name,
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              name: state.name,
+              child: const HomeView(),
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shartflix/api/user_api.dart';
 import 'package:shartflix/repository/interface/i_repository.dart';
 
@@ -44,5 +45,15 @@ class UserRepository extends IRepository {
       filePath: filePath,
       cancelToken: cancelToken,
     );
+  }
+
+  void setToken(OAuth2Token token) {
+    _userApi.setToken(token);
+  }
+
+  void logout({
+    CancelToken? cancelToken,
+  }) {
+    _userApi.logoutSession();
   }
 }
