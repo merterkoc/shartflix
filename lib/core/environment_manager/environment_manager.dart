@@ -17,7 +17,7 @@ class EnvironmentManager {
       EnvironmentManager._();
 
   Future<void> init() async {
-    await _dotEnv.load(fileName: 'env/.env');
+    await _dotEnv.load();
     loadConfig();
   }
 

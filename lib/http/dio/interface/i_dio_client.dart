@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shartflix/http/dio/interceptors/http_handler/default_http_handler.dart';
 
@@ -20,6 +20,12 @@ abstract class IDioClient {
       ..options.connectTimeout = connectTimeout ?? const Duration(seconds: 20)
       ..options.receiveTimeout = receiveTimeout ?? const Duration(seconds: 20)
       ..options.responseType = ResponseType.json
+      ..interceptors.add(
+        LogInterceptor(
+          responseBody: kDebugMode || kProfileMode,
+          requestBody: kDebugMode || kProfileMode,
+        ),
+      )
       ..interceptors.add(interceptor ?? DefaultHttpHeaderInterceptor())
       ..interceptors.add(_fresh);
   }
