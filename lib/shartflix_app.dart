@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shartflix/core/router/go_router.dart';
 import 'package:shartflix/core/settings/settings_controller.dart';
 import 'package:shartflix/core/theme/blue/blue_theme.dart';
 import 'package:shartflix/core/theme/default/default_theme.dart';
 import 'package:shartflix/core/theme/green/green_theme.dart';
 import 'package:shartflix/core/theme/material_theme.dart';
 import 'package:shartflix/core/theme/pink/pink_theme.dart';
-import 'package:shartflix/feature/home/view/home_view.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class ShartflixApp extends StatelessWidget {
@@ -30,7 +30,8 @@ class ShartflixApp extends StatelessWidget {
             themeMap[settingsController.themeStyle] ??
             const DefaultMaterialTheme();
 
-        return MaterialApp(
+        return MaterialApp.router(
+          routerConfig: AppRouter().router,
           themeMode: settingsController.themeMode == Brightness.dark
               ? ThemeMode.dark
               : ThemeMode.light,
@@ -44,7 +45,6 @@ class ShartflixApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const Home(),
         );
       },
     );
