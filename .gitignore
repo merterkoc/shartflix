@@ -56,5 +56,6 @@ node_modules/
 lib/core/l10n/**.dart
 lib/core/l10n/generated/**.dart
 
+env/.env
 
 untranslated_messages.txt
