@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shartflix/core/router/shell_view/shell_view.dart';
+import 'package:shartflix/feature/login/view/login_view.dart';
 import 'package:shartflix/feature/not_found/view/not_found_view.dart';
+import 'package:shartflix/feature/register/view/register_view.dart';
 
 /// Rooter Navigator Key
 final GlobalKey<NavigatorState> rooterNavigatorKey =
@@ -37,7 +39,7 @@ class AppRouter {
 
   final GoRouter _goRouter = GoRouter(
     debugLogDiagnostics: kDebugMode,
-    initialLocation: '/notFound',
+    initialLocation: '/login',
     navigatorKey: rooterNavigatorKey,
     observers: [routeObserver],
     routes: [
@@ -57,15 +59,23 @@ class AppRouter {
               child: const SizedBox.shrink(),
             ),
           ),
-          transitionGoRoute(
+          GoRoute(
             path: AppRoute.register.path,
             name: AppRoute.register.name,
-            pageBuilder: (context, state) => const SizedBox.shrink(),
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              name: state.name,
+              child: const RegisterView(),
+            ),
           ),
-          transitionGoRoute(
+          GoRoute(
             path: AppRoute.login.path,
             name: AppRoute.login.name,
-            pageBuilder: (context, state) => const SizedBox.shrink(),
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              name: state.name,
+              child: const LoginView(),
+            ),
           ),
         ],
       ),
@@ -78,41 +88,4 @@ class AppRouter {
   );
 
   GoRouter get router => _goRouter;
-}
-
-GoRoute transitionGoRoute({
-  required String path,
-  required String name,
-  required Widget Function(BuildContext, GoRouterState) pageBuilder,
-  String? Function(dynamic state, dynamic redirect)? redirect,
-  List<RouteBase>? routes,
-  Duration transitionDuration = Duration.zero,
-}) {
-  return GoRoute(
-    path: path,
-    name: name,
-    redirect: redirect,
-    routes: routes ?? [],
-    pageBuilder: (context, state) => CustomTransitionPage<void>(
-      key: state.pageKey,
-      transitionDuration: transitionDuration,
-      child: pageBuilder(context, state),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0, 1);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        final tween = Tween(begin: begin, end: end);
-        final curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: curve,
-        );
-
-        return SlideTransition(
-          position: tween.animate(curvedAnimation),
-          child: child,
-        );
-      },
-    ),
-  );
 }

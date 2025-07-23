@@ -4,6 +4,14 @@
     "description": "Uygulamanın adı",
     "type": "text"
   },
+  "login_view_title": "Merhabalar",
+  "login_view_subtitle": "Tempus varius a vitae interdum id tortor elementum tristique eleifend at.",
+  "login_view_email_hint": "E-posta adresi",
+  "login_view_password_hint": "Parola",
+  "login_view_forgot_password": "Şifremi unuttum",
+  "login_view_login_button": "Giriş yap",
+  "login_view_register_button": "Kayıt ol",
+  "login_view_register_prompt": "Hesabınız yok mu?",
   "not_found_view_app_bar_title": "Bulunamadı",
   "not_found_view_message": "Aradığınız sayfa bulunamadı."
 }

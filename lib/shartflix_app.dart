@@ -26,9 +26,7 @@ class ShartflixApp extends StatelessWidget {
           3: const PinkMaterialTheme(),
         };
 
-        final theme =
-            themeMap[settingsController.themeStyle] ??
-            const DefaultMaterialTheme();
+        final theme = themeMap[1] ?? const DefaultMaterialTheme();
 
         return MaterialApp.router(
           routerConfig: AppRouter().router,
