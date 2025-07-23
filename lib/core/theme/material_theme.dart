@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 abstract class MaterialTheme {
   const MaterialTheme();
 
-  void light() {}
+  ThemeData? light();
 
-  void dark() {}
+  ThemeData? dark();
 }

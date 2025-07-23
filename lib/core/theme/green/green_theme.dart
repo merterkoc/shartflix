@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shartflix/core/theme/material_theme.dart';
 
 class GreenMaterialTheme extends MaterialTheme {
-  const GreenMaterialTheme(this.textTheme);
+  const GreenMaterialTheme({
+    this.textTheme = const TextTheme(),
+  });
 
   final TextTheme textTheme;
 

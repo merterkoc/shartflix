@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shartflix/core/theme/material_theme.dart';
 
 class PinkMaterialTheme extends MaterialTheme {
-  const PinkMaterialTheme(this.textTheme);
+  const PinkMaterialTheme({
+    this.textTheme = const TextTheme(),
+  });
 
   final TextTheme textTheme;
 
