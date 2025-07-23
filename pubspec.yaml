@@ -2,32 +2,34 @@ name: shartflix
 description: "Shartflix is a movie app."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 0.0.1+1
 
 environment:
   sdk: ^3.8.1
 
 dependencies:
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
-
 dev_dependencies:
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  very_good_analysis: ^9.0.0
+  flutter_gen_runner: ^5.4.0
+  build_runner: ^2.4.9
+  image: ^4.1.7
 
-  flutter_lints: ^5.0.0
+flutter_gen:
+  integrations:
+    flutter_svg: true
+  output: lib/const/assets/gen/
 
 flutter:
-
   uses-material-design: true
-
   assets:
-    - images/a_dot_burr.jpeg
-
-
-
+    - assets/images/
   fonts:
     - family: Schyler
       fonts:
