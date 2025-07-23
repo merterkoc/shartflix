@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shartflix/core/theme/material_theme.dart';
 
 class DefaultMaterialTheme extends MaterialTheme {
-  const DefaultMaterialTheme(this.textTheme);
+  const DefaultMaterialTheme({
+    this.textTheme = const TextTheme(),
+  });
 
   final TextTheme textTheme;
 
