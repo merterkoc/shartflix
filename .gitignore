@@ -43,3 +43,16 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Dart files
+**.freezed.dart
+**.g.dart
+**.cached.dart
+**.gen.dart
+
+# Node.js dependency directory
+node_modules/
+
+lib/l10n/**.dart
+
+untranslated_messages.txt
