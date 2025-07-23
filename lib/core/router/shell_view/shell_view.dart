@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShellView extends StatefulWidget {
   const ShellView({required this.child, super.key});
@@ -40,10 +39,7 @@ class _ShellViewState extends State<ShellView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return MultiBlocListener(
-      listeners: const [],
-      child: widget.child,
-    );
+    return widget.child;
   }
 
   @override
