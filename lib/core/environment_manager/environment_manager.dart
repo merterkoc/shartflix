@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shartflix/core/environment_manager/env_variables.dart';
 

@@ -86,7 +86,7 @@ abstract class ApiProvider {
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   }) async {
-    String url = [
+    var url = [
       _path,
       resource,
     ].where((e) => e != null && e.isNotEmpty).join('/');
