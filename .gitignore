@@ -53,6 +53,8 @@ app.*.map.json
 # Node.js dependency directory
 node_modules/
 
-lib/l10n/**.dart
+lib/core/l10n/**.dart
+lib/core/l10n/generated/**.dart
+
 
 untranslated_messages.txt

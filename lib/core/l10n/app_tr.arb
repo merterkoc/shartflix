@@ -1,0 +1,7 @@
+{
+  "app_name": "Shartflix",
+  "@app_name": {
+    "description": "Uygulamanın adı",
+    "type": "text"
+  }
+}

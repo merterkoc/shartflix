@@ -1,0 +1,7 @@
+{
+  "app_name": "Shartflix",
+  "@app_name": {
+    "description": "The title of the application",
+    "type": "text"
+  }
+}
