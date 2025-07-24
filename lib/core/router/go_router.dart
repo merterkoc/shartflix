@@ -6,6 +6,7 @@ import 'package:shartflix/feature/home/view/home_view.dart';
 import 'package:shartflix/feature/login/view/login_view.dart';
 import 'package:shartflix/feature/not_found/view/not_found_view.dart';
 import 'package:shartflix/feature/register/view/register_view.dart';
+import 'package:shartflix/http/dio/token_storage/token_storage.dart';
 
 /// Rooter Navigator Key
 final GlobalKey<NavigatorState> rooterNavigatorKey =
@@ -41,7 +42,9 @@ class AppRouter {
 
   final GoRouter _goRouter = GoRouter(
     debugLogDiagnostics: kDebugMode,
-    initialLocation: '/',
+    initialLocation: TokenStorageImpl().hasToken()
+        ? AppRoute.home.path
+        : AppRoute.login.path,
     navigatorKey: rooterNavigatorKey,
     observers: [routeObserver],
     routes: [

@@ -21,6 +21,20 @@ Shartflix is a movie app.
 
 ---
 
+## App Start Requirements
+
+Before running the app, you need to set up environment variables:
+
+1. Create a `.env` file in the project root directory.
+2. Add the following line to your `.env` file, replacing the URL with your backend API endpoint:
+   ```env
+   BASE_URL=https://your-api-url.com
+   ```
+
+> **Note:** The app will not work properly without a valid `BASE_URL` defined in the `.env` file.
+
+---
+
 ## Asset Management & Automation
 
 ### 1. Automatic Asset Scaling (asset_resizer.dart)

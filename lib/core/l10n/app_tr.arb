@@ -12,6 +12,16 @@
   "login_view_login_button": "Giriş yap",
   "login_view_register_button": "Kayıt ol",
   "login_view_register_prompt": "Hesabınız yok mu?",
+  "login_view_error_message": "Giriş başarısız. Lütfen bilgilerinizi kontrol edip tekrar deneyin.",
+  "@login_view_error_message": {
+    "description": "Giriş başarısız olduğunda gösterilen statik hata mesajı.",
+    "type": "text"
+  },
+  "close_button_label": "Kapat",
+  "@close_button_label": {
+    "description": "Dialog ve bottom sheetlerdeki kapat butonu etiketi.",
+    "type": "text"
+  },
   "not_found_view_app_bar_title": "Bulunamadı",
   "not_found_view_message": "Aradığınız sayfa bulunamadı."
 }

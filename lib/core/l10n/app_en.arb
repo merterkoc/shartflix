@@ -12,6 +12,16 @@
   "login_view_login_button": "Giriş yap",
   "login_view_register_button": "Kayıt ol",
   "login_view_register_prompt": "Hesabınız yok mu?",
+  "login_view_error_message": "Login failed. Please check your credentials and try again.",
+  "@login_view_error_message": {
+    "description": "Static error message shown when login fails.",
+    "type": "text"
+  },
+  "close_button_label": "Close",
+  "@close_button_label": {
+    "description": "Label for the close button in dialogs and bottom sheets.",
+    "type": "text"
+  },
   "not_found_view_app_bar_title": "Bulunamadı",
   "not_found_view_message": "Aradığınız sayfa bulunamadı."
 }

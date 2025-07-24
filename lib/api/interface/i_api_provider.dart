@@ -17,11 +17,6 @@ abstract class ApiProvider {
   final Interceptor? interceptor;
 
   Future<ResponseEntity<dynamic>> get({
-    /// The resource path
-    /// e.g. delete
-    /// delete is the resource
-    /// if you set resource to 'delete', your url like this
-    /// http://localhost:8080/yourPath/delete
     String? resource,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,

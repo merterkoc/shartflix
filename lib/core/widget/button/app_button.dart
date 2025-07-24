@@ -7,6 +7,7 @@ class AppButton extends StatelessWidget {
     this.width,
     this.height,
     this.icon,
+    this.isLoading = false,
     super.key,
   }) : outlined = true;
 
@@ -16,6 +17,7 @@ class AppButton extends StatelessWidget {
     this.width,
     this.height,
     this.icon,
+    this.isLoading = false,
     super.key,
   }) : outlined = false;
   final String text;
@@ -24,6 +26,7 @@ class AppButton extends StatelessWidget {
   final double? width;
   final double? height;
   final IconData? icon;
+  final bool isLoading;
 
   static const double _defaultHeight = 53.31;
   static const double _radius = 18;
@@ -37,8 +40,19 @@ class AppButton extends StatelessWidget {
       color: outlined ? brandColor : Colors.white,
       decoration: TextDecoration.none,
     );
-    Widget child = Text(text, style: style);
-    if (icon != null) {
+    Widget child;
+    if (isLoading) {
+      child = SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(
+          strokeWidth: 2.5,
+          valueColor: AlwaysStoppedAnimation<Color>(
+            outlined ? brandColor : Colors.white,
+          ),
+        ),
+      );
+    } else if (icon != null) {
       child = Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -48,10 +62,12 @@ class AppButton extends StatelessWidget {
           Flexible(child: Text(text, style: style)),
         ],
       );
+    } else {
+      child = Text(text, style: style);
     }
     final button = outlined
         ? OutlinedButton(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: OutlinedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(_radius),
@@ -66,7 +82,7 @@ class AppButton extends StatelessWidget {
             child: child,
           )
         : ElevatedButton(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: brandColor,
               shape: RoundedRectangleBorder(

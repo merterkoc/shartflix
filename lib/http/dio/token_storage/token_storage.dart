@@ -14,6 +14,19 @@ class TokenStorageImpl implements TokenStorage<OAuth2Token> {
 
   TokenStorageImpl._();
 
+  Future<void> init() async {
+    final result = await _secureStorage.read(
+      key: StorageKey.accessToken.rawValue,
+    );
+    if (result != null) {
+      _token = OAuth2Token(accessToken: result);
+    } else {
+      _token = null;
+    }
+  }
+
+  OAuth2Token? _token;
+
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   static final TokenStorageImpl _instance = TokenStorageImpl._();
@@ -26,8 +39,9 @@ class TokenStorageImpl implements TokenStorage<OAuth2Token> {
   @override
   Future<OAuth2Token?> read() async {
     OAuth2Token? token;
-    final result =
-        await _secureStorage.read(key: StorageKey.accessToken.rawValue);
+    final result = await _secureStorage.read(
+      key: StorageKey.accessToken.rawValue,
+    );
     if (result != null) {
       return OAuth2Token(accessToken: result);
     }
@@ -40,5 +54,9 @@ class TokenStorageImpl implements TokenStorage<OAuth2Token> {
       key: StorageKey.accessToken.toString(),
       value: token.accessToken,
     );
+  }
+
+  bool hasToken() {
+    return _token != null && _token!.accessToken.isNotEmpty;
   }
 }
