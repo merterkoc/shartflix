@@ -50,5 +50,8 @@
   "register_password_empty": "Parola boş olamaz",
   "register_password_min_length": "Parola en az 6 karakter olmalı",
   "register_name_empty": "Ad soyad boş olamaz",
-  "register_passwords_do_not_match": "Parolalar eşleşmiyor"
+  "register_passwords_do_not_match": "Parolalar eşleşmiyor",
+  "register_error_user_exists": "Bu e-posta ile zaten bir hesap var.",
+  "register_error_invalid_email": "Geçersiz e-posta adresi.",
+  "register_error_unknown": "Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin."
 }

@@ -8,6 +8,8 @@ import 'package:shartflix/feature/register/bloc/name_input.dart';
 import 'package:shartflix/feature/register/bloc/password_input.dart';
 import 'package:shartflix/feature/register/bloc/register_bloc.dart';
 import 'package:shartflix/ui/app_ui.dart';
+import 'package:shartflix/model/enum/register_failure.dart';
+import 'package:shartflix/core/widget/app_error_bottom_sheet.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -49,10 +51,19 @@ class _RegisterViewState extends State<RegisterView> {
         child: BlocListener<UserBloc, UserState>(
           listener: (context, state) {
             if (state is UserRegisterFailure) {
+              String errorMessage;
+              switch (state.registerFailure) {
+                case RegisterFailure.userExist:
+                  errorMessage = context.l10n.register_error_user_exists;
+                case RegisterFailure.invalidEmail:
+                  errorMessage = context.l10n.register_error_invalid_email;
+                case RegisterFailure.unknownError:
+                  errorMessage = context.l10n.register_error_unknown;
+              }
               showAppErrorBottomSheet(
                 context: context,
                 title: context.l10n.register_view_title,
-                message: state.message,
+                message: errorMessage,
                 icon: Icons.error_outline,
               );
             }
@@ -193,6 +204,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     onChanged: (value) => context
                                         .read<RegisterBloc>()
                                         .add(RegisterEmailChanged(value)),
+                                    autofillHints: const [AutofillHints.email],
                                   ),
                                   AnimatedOpacity(
                                     opacity:
@@ -293,6 +305,9 @@ class _RegisterViewState extends State<RegisterView> {
                                     onChanged: (value) => context
                                         .read<RegisterBloc>()
                                         .add(RegisterPasswordChanged(value)),
+                                    autofillHints: const [
+                                      AutofillHints.newPassword,
+                                    ],
                                   ),
                                   AnimatedOpacity(
                                     opacity:
@@ -390,6 +405,9 @@ class _RegisterViewState extends State<RegisterView> {
                                         context.read<RegisterBloc>().add(
                                           RegisterConfirmPasswordChanged(value),
                                         ),
+                                    autofillHints: const [
+                                      AutofillHints.newPassword,
+                                    ],
                                   ),
                                   AnimatedOpacity(
                                     opacity:

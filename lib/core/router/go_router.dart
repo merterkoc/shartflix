@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shartflix/core/router/shell_view/shell_view.dart';
 import 'package:shartflix/feature/home/view/home_view.dart';
+import 'package:shartflix/feature/login/bloc/user_bloc.dart';
 import 'package:shartflix/feature/login/view/login_view.dart';
 import 'package:shartflix/feature/not_found/view/not_found_view.dart';
 import 'package:shartflix/feature/register/view/register_view.dart';
+import 'package:shartflix/feature/upload_photo/view/upload_photo_view.dart';
 import 'package:shartflix/http/dio/token_storage/token_storage.dart';
 
 /// Rooter Navigator Key
@@ -22,15 +25,15 @@ final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 
 enum AppRoute {
-  notFound(path: '*', full: '/notFound'),
-  register(path: '/register', full: '/register'),
-  login(path: '/login', full: '/login'),
-  home(path: '/home', full: '/home');
+  notFound(path: '*'),
+  register(path: '/register'),
+  login(path: '/login'),
+  home(path: '/home'),
+  photoUpload(path: 'photo-upload');
 
-  const AppRoute({required this.path, this.full});
+  const AppRoute({required this.path});
 
   final String path;
-  final String? full;
 }
 
 class AppRouter {
@@ -59,7 +62,6 @@ class AppRouter {
           GoRoute(
             path: '/',
             pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
               name: state.name,
               child: const SizedBox.shrink(),
             ),
@@ -68,7 +70,6 @@ class AppRouter {
             path: AppRoute.register.path,
             name: AppRoute.register.name,
             pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
               name: state.name,
               child: const RegisterView(),
             ),
@@ -77,7 +78,6 @@ class AppRouter {
             path: AppRoute.login.path,
             name: AppRoute.login.name,
             pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
               name: state.name,
               child: const LoginView(),
             ),
@@ -86,16 +86,32 @@ class AppRouter {
             path: AppRoute.home.path,
             name: AppRoute.home.name,
             pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
               name: state.name,
               child: const HomeView(),
             ),
+            redirect: (context, state) {
+              final userState = context.read<UserBloc>().state;
+              if (userState is UserRegisterSuccess &&
+                  userState.user.photoUrl.isEmpty) {
+                return '/home/photo-upload';
+              }
+              return null;
+            },
+            routes: [
+              GoRoute(
+                path: AppRoute.photoUpload.path,
+                name: AppRoute.photoUpload.name,
+                pageBuilder: (context, state) => MaterialPage(
+                  name: state.name,
+                  child: const UploadPhotoView(),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
-      key: state.pageKey,
       name: state.name,
       child: const NotFoundView(),
     ),

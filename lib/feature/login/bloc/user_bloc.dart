@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shartflix/model/dto/user/user_dto.dart';
+import 'package:shartflix/model/enum/register_failure.dart';
 import 'package:shartflix/repository/user_repository.dart';
 
 part 'user_event.dart';
@@ -60,10 +61,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   ) async {
     emit(UserLoading());
     try {
-      if (event.password != event.confirmPassword) {
-        emit(const UserRegisterFailure(message: 'Passwords do not match'));
-        return;
-      }
       final response = await userRepository.register(
         email: event.email,
         password: event.password,
@@ -76,11 +73,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserRegisterSuccess(user: user));
       } else {
         emit(
-          UserRegisterFailure(message: response.message ?? 'Register failed'),
+          UserRegisterFailure(
+            message: response.message ?? 'Register failed',
+            registerFailure: RegisterFailure.fromCode(
+              response.message ?? 'UNKNOWN_ERROR',
+            ),
+          ),
         );
       }
     } catch (e) {
-      emit(UserRegisterFailure(message: e.toString()));
+      emit(
+        UserRegisterFailure(
+          message: e.toString(),
+          registerFailure: RegisterFailure.unknownError,
+        ),
+      );
       rethrow;
     }
   }

@@ -121,9 +121,11 @@ class _LoginViewState extends State<LoginView> {
                                         context,
                                       ).requestFocus(_passwordFocus);
                                     },
+                                    autofocus: false,
                                     onChanged: (value) => context
                                         .read<LoginValidationBloc>()
                                         .add(LoginEmailChanged(value)),
+                                    autofillHints: const [AutofillHints.email],
                                   ),
                                   AnimatedOpacity(
                                     opacity:
@@ -216,6 +218,7 @@ class _LoginViewState extends State<LoginView> {
                                     onChanged: (value) => context
                                         .read<LoginValidationBloc>()
                                         .add(LoginPasswordChanged(value)),
+                                    autofillHints: const [AutofillHints.password],
                                   ),
                                   AnimatedOpacity(
                                     opacity:

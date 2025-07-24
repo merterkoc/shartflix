@@ -50,5 +50,8 @@
   "register_password_empty": "Password cannot be empty",
   "register_password_min_length": "Password must be at least 6 characters",
   "register_name_empty": "Full name cannot be empty",
-  "register_passwords_do_not_match": "Passwords do not match"
+  "register_passwords_do_not_match": "Passwords do not match",
+  "register_error_user_exists": "An account with this email already exists.",
+  "register_error_invalid_email": "Invalid email address.",
+  "register_error_unknown": "An unknown error occurred. Please try again."
 }
