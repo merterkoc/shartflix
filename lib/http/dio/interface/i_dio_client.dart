@@ -200,10 +200,19 @@ abstract class IDioClient {
     if (error.response != null) {
       final stackTrace = StackTrace.current;
       debugPrint(stackTrace.toString());
+      final data = error.response!.data;
+      final dataResponse = data is Response
+          ? (data as Map<String, dynamic>)['response']
+          : data;
+      final message = dataResponse is Map<String, dynamic>
+          ? ((dataResponse['response'] as Map<String, dynamic>)['message']??
+                dataResponse['error'] ??
+                'Unknown error')
+          : 'Unknown error';
       return Future.value(
         ResponseEntity<T>.error(
           statusCode: error.response!.statusCode!,
-          message: '${error.response!.statusMessage}',
+          message: message is String ? message : 'UNKNOWN_ERROR',
           data:
               error.response!.statusCode == 200 && error.response?.data != null
               ? error.response?.data as T

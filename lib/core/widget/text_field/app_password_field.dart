@@ -12,6 +12,7 @@ class AppPasswordField extends StatefulWidget {
     this.onFieldSubmitted,
     this.autofocus = false,
     this.onChanged,
+    this.autofillHints,
   });
 
   final TextEditingController controller;
@@ -21,6 +22,7 @@ class AppPasswordField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
+  final List<String>? autofillHints;
 
   @override
   State<AppPasswordField> createState() => _AppPasswordFieldState();
@@ -42,6 +44,7 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       autofocus: widget.autofocus,
       onChanged: widget.onChanged,
+      autofillHints: widget.autofillHints,
       suffixIcon: IconButton(
         icon: Icon(
           _obscurePassword ? Icons.visibility_off : Icons.visibility,
