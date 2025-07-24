@@ -24,5 +24,31 @@
     "type": "text"
   },
   "not_found_view_app_bar_title": "Bulunamadı",
-  "not_found_view_message": "Aradığınız sayfa bulunamadı."
+  "not_found_view_message": "Aradığınız sayfa bulunamadı.",
+  "register_view_login_prompt": "Zaten bir hesabınız var mı?",
+  "register_view_login_button": "Giriş yap",
+  "@register_view_login_prompt": {
+    "description": "Kayıt ekranında kullanıcıya hesabı varsa gösterilen prompt.",
+    "type": "text"
+  },
+  "@register_view_login_button": {
+    "description": "Kayıt ekranında girişe yönlendiren buton metni.",
+    "type": "text"
+  },
+  "register_view_title": "Kayıt Ol",
+  "register_view_subtitle": "Hesabınızı oluşturun",
+  "register_view_name_hint": "Ad Soyad",
+  "register_view_email_hint": "E-posta adresi",
+  "register_view_password_hint": "Parola",
+  "register_view_confirm_password_hint": "Parolayı Onayla",
+  "register_view_button": "Kayıt Ol",
+  "register_view_agreement_prefix": "Kullanıcı sözleşmesini ",
+  "register_view_agreement_bold": "okudum ve kabul ediyorum",
+  "register_view_agreement_suffix": ". Bu sözleşmeyi okuyarak devam ediniz lütfen.",
+  "register_email_empty": "E-posta adresi boş olamaz",
+  "register_email_invalid": "Geçerli bir e-posta adresi girin",
+  "register_password_empty": "Parola boş olamaz",
+  "register_password_min_length": "Parola en az 6 karakter olmalı",
+  "register_name_empty": "Ad soyad boş olamaz",
+  "register_passwords_do_not_match": "Parolalar eşleşmiyor"
 }

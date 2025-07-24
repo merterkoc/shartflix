@@ -11,10 +11,7 @@ class ShellView extends StatefulWidget {
 }
 
 class _ShellViewState extends State<ShellView>
-    with
-        AutomaticKeepAliveClientMixin<ShellView>,
-        WidgetsBindingObserver
-        {
+    with AutomaticKeepAliveClientMixin<ShellView>, WidgetsBindingObserver {
   AppLifecycleState? appState;
 
   @override
@@ -33,14 +30,18 @@ class _ShellViewState extends State<ShellView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appState = state;
-    if (state == AppLifecycleState.resumed) {
-    }
+    if (state == AppLifecycleState.resumed) {}
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return widget.child;
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: widget.child,
+    );
   }
 
   @override

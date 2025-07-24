@@ -12,6 +12,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc({required this.userRepository}) : super(UserInitial()) {
     on<LoginRequested>(_onLoginRequested);
     on<LogoutRequested>(_onLogoutRequested);
+    on<RegisterRequested>(_onRegisterRequested);
   }
 
   final UserRepository userRepository;
@@ -49,6 +50,37 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       userRepository.logout();
     } catch (e) {
       emit(UserFailure(message: e.toString()));
+      rethrow;
+    }
+  }
+
+  Future<void> _onRegisterRequested(
+    RegisterRequested event,
+    Emitter<UserState> emit,
+  ) async {
+    emit(UserLoading());
+    try {
+      if (event.password != event.confirmPassword) {
+        emit(const UserRegisterFailure(message: 'Passwords do not match'));
+        return;
+      }
+      final response = await userRepository.register(
+        email: event.email,
+        password: event.password,
+        name: event.name,
+      );
+      if (response.isOk) {
+        final data = response.data as Map<String, dynamic>;
+        final user = UserDTO.fromJson(data['data'] as Map<String, dynamic>);
+        userRepository.setToken(OAuth2Token(accessToken: user.token));
+        emit(UserRegisterSuccess(user: user));
+      } else {
+        emit(
+          UserRegisterFailure(message: response.message ?? 'Register failed'),
+        );
+      }
+    } catch (e) {
+      emit(UserRegisterFailure(message: e.toString()));
       rethrow;
     }
   }

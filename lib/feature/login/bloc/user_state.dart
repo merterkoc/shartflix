@@ -28,3 +28,21 @@ class UserFailure extends UserState {
   @override
   List<Object?> get props => [message];
 }
+
+class UserRegisterSuccess extends UserState {
+  const UserRegisterSuccess({required this.user});
+
+  final dynamic user;
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class UserRegisterFailure extends UserState {
+  const UserRegisterFailure({required this.message});
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}

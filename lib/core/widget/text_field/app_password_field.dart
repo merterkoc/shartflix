@@ -7,10 +7,20 @@ class AppPasswordField extends StatefulWidget {
     required this.controller,
     required this.hintText,
     super.key,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.autofocus = false,
+    this.onChanged,
   });
 
   final TextEditingController controller;
   final String hintText;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
+  final bool autofocus;
+  final ValueChanged<String>? onChanged;
 
   @override
   State<AppPasswordField> createState() => _AppPasswordFieldState();
@@ -27,6 +37,11 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
       prefixIcon: const Icon(FontAwesomeIcons.lock),
       obscureText: _obscurePassword,
       keyboardType: TextInputType.visiblePassword,
+      focusNode: widget.focusNode,
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      autofocus: widget.autofocus,
+      onChanged: widget.onChanged,
       suffixIcon: IconButton(
         icon: Icon(
           _obscurePassword ? Icons.visibility_off : Icons.visibility,

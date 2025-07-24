@@ -24,5 +24,31 @@
     "type": "text"
   },
   "not_found_view_app_bar_title": "Bulunamadı",
-  "not_found_view_message": "Aradığınız sayfa bulunamadı."
+  "not_found_view_message": "Aradığınız sayfa bulunamadı.",
+  "register_view_title": "Register",
+  "register_view_subtitle": "Create your account",
+  "register_view_name_hint": "Full Name",
+  "register_view_email_hint": "Email address",
+  "register_view_password_hint": "Password",
+  "register_view_confirm_password_hint": "Confirm Password",
+  "register_view_button": "Register",
+  "register_view_agreement_prefix": "I have read and accept the ",
+  "register_view_agreement_bold": "user agreement",
+  "register_view_agreement_suffix": ". Please read this agreement before continuing.",
+  "register_view_login_prompt": "Already have an account?",
+  "register_view_login_button": "Login",
+  "@register_view_login_prompt": {
+    "description": "Prompt for users on the register screen who already have an account.",
+    "type": "text"
+  },
+  "@register_view_login_button": {
+    "description": "Button text for navigating to login from register screen.",
+    "type": "text"
+  },
+  "register_email_empty": "Email address cannot be empty",
+  "register_email_invalid": "Please enter a valid email address",
+  "register_password_empty": "Password cannot be empty",
+  "register_password_min_length": "Password must be at least 6 characters",
+  "register_name_empty": "Full name cannot be empty",
+  "register_passwords_do_not_match": "Passwords do not match"
 }
