@@ -34,7 +34,7 @@ class _LoginViewState extends State<LoginView> {
           if (state is UserFailure) {
             showAppErrorBottomSheet(
               context: context,
-              title: context.l10n.login_view_title,
+              title: context.l10n.login_view_error_title,
               message: context.l10n.login_view_error_message,
               icon: Icons.error_outline,
             );

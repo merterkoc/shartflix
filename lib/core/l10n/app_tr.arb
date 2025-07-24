@@ -12,6 +12,7 @@
   "login_view_login_button": "Giriş yap",
   "login_view_register_button": "Kayıt ol",
   "login_view_register_prompt": "Hesabınız yok mu?",
+  "login_view_error_title": "Giriş Hatası",
   "login_view_error_message": "Giriş başarısız. Lütfen bilgilerinizi kontrol edip tekrar deneyin.",
   "@login_view_error_message": {
     "description": "Giriş başarısız olduğunda gösterilen statik hata mesajı.",

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fresh_dio/fresh_dio.dart';
+import 'package:shartflix/model/dto/user/user_dto.dart';
 import 'package:shartflix/repository/user_repository.dart';
 
 part 'user_event.dart';
@@ -26,9 +27,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         password: event.password,
       );
       if (response.isOk) {
-        final data = response.data;
-        final token = data['data']['token'];
-        userRepository.setToken(OAuth2Token(accessToken: token as String));
+        final data = response.data as Map<String, dynamic>;
+        final user = UserDTO.fromJson(data['data'] as Map<String, dynamic>);
+        userRepository.setToken(OAuth2Token(accessToken: user.token));
         emit(UserLoginSuccess(user: response.data));
       } else {
         emit(UserFailure(message: response.message ?? 'Login failed'));
@@ -43,7 +44,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     LogoutRequested event,
     Emitter<UserState> emit,
   ) async {
-    emit(UserLoading());
+    emit(UserInitial());
     try {
       userRepository.logout();
     } catch (e) {
