@@ -53,5 +53,38 @@
   "register_passwords_do_not_match": "Parolalar eşleşmiyor",
   "register_error_user_exists": "Bu e-posta ile zaten bir hesap var.",
   "register_error_invalid_email": "Geçersiz e-posta adresi.",
-  "register_error_unknown": "Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin."
+  "register_error_unknown": "Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+  "photo_upload_title": "Fotoğraf Yükle",
+  "photo_upload_subtitle": "Yüklemek için bir fotoğraf seçin",
+  "photo_upload_gallery": "Galeriden Seç",
+  "photo_upload_camera": "Kamera",
+  "photo_upload_save_button": "Fotoğrafı Kaydet",
+  "photo_upload_success": "Fotoğraf başarıyla yüklendi!",
+  "photo_upload_next_button": "İleri",
+  "home_view_title": "Ana Sayfa",
+  "home_view_profile_title": "Profil",
+  "home_view_home_button": "Ana Sayfa",
+  "home_view_profile_button": "Profil",
+  "home_view_dark_light_tooltip": "Karanlık/Aydınlık",
+  "home_view_change_theme_tooltip": "Tema Rengini Değiştir",
+  "profile_view_add_photo_button": "Fotoğraf Ekle",
+  "profile_view_id_label": "ID: {id}",
+  "@profile_view_id_label": {
+    "description": "Kullanıcı ID etiketi placeholder ile",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "upload_failed_title": "Yükleme Başarısız",
+  "upload_failed_image_too_large": "Resim çok büyük. Lütfen daha küçük bir resim seçin.",
+  "upload_failed_unknown_error": "Fotoğraf yüklenirken bir hata oluştu.",
+  "fetch_user_failed": "Kullanıcı profili alınamadı",
+  "login_failed": "Giriş başarısız",
+  "profile_picture_upload_failed": "Profil fotoğrafı yükleme başarısız",
+  "unknown_error": "Bilinmeyen hata",
+  "connection_timeout": "Bağlantı zaman aşımı",
+  "error_no_password_match": "Parolalar eşleşmiyor",
+  "error_unknown": "Bilinmeyen bir hata oluştu"
 }

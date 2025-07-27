@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:shartflix/api/interface/i_api_provider.dart';
 
 class UserApi extends ApiProvider {
@@ -48,21 +50,26 @@ class UserApi extends ApiProvider {
   }
 
   Future<ResponseEntity<dynamic>> uploadProfilePicture({
-    required String filePath,
+    required File file,
     CancelToken? cancelToken,
   }) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+        contentType: DioMediaType('image', 'jpeg'),
+      ),
+    });
     return post(
       resource: 'upload_photo',
-      data: {
-        'file': filePath,
-      },
+      data: formData,
       cancelToken: cancelToken,
     );
   }
 
   void logoutSession({
     CancelToken? cancelToken,
-  })  {
-     logout();
+  }) {
+    logout();
   }
 }

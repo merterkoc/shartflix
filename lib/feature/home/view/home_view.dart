@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shartflix/bloc/user/user_bloc.dart';
+import 'package:shartflix/core/extensions/context_ext.dart';
 import 'package:shartflix/core/settings/settings_controller.dart';
 import 'package:shartflix/core/widget/button/app_button.dart';
-import 'package:shartflix/feature/login/bloc/user_bloc.dart';
+import 'package:shartflix/feature/home/view/profile_view.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class HomeView extends StatefulWidget {
@@ -17,57 +19,63 @@ class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    if (context.read<UserBloc>().state.userResponse.status.isInitialized) {
+      context.read<UserBloc>().add(const FetchUser());
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final settings = GetIt.instance<SettingsController>();
     final pages = <Widget>[
-      const Center(child: Text('Home Page', style: TextStyle(fontSize: 24))),
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Profile Page', style: TextStyle(fontSize: 24)),
-            const SizedBox(height: 32),
-            AppButton.outlined(
-              text: 'Logout',
-              icon: Icons.logout,
-              onPressed: () {
-                context.read<UserBloc>().add(
-                  const LogoutRequested(),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      Center(child: Text(context.l10n.home_view_title, style: const TextStyle(fontSize: 24))),
+      const ProfileView(),
     ];
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(
-              settings.themeMode == Brightness.dark
-                  ? Icons.dark_mode
-                  : Icons.light_mode,
-            ),
-            tooltip: 'Dark/Light',
-            onPressed: () {
-              settings.updateThemeMode(
-                settings.themeMode == Brightness.dark
-                    ? Brightness.light
-                    : Brightness.dark,
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.palette),
-            tooltip: 'Change Theme Color',
-            onPressed: () {
-              settings.updateThemeStyle((settings.themeStyle + 1) % 4);
-            },
-          ),
-        ],
-      ),
+      appBar: _selectedIndex == 1
+          ? AppBar(
+              centerTitle: true,
+              title: Text(
+                context.l10n.home_view_profile_title,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    settings.themeMode == Brightness.dark
+                        ? Icons.dark_mode
+                        : Icons.light_mode,
+                  ),
+                  tooltip: context.l10n.home_view_dark_light_tooltip,
+                  onPressed: () {
+                    settings.updateThemeMode(
+                      settings.themeMode == Brightness.dark
+                          ? Brightness.light
+                          : Brightness.dark,
+                    );
+                  },
+                ),
+
+                IconButton(
+                  icon: const Icon(Icons.palette),
+                  tooltip: context.l10n.home_view_change_theme_tooltip,
+                  onPressed: () {
+                    settings.updateThemeStyle((settings.themeStyle + 1) % 4);
+                  },
+                ),
+
+                IconButton(
+                  onPressed: () {
+                    context.read<UserBloc>().add(const LogoutRequested());
+                  },
+                  icon: const Icon(Icons.logout),
+                ),
+              ],
+            )
+          : null,
       body: SafeArea(
         child: pages[_selectedIndex],
       ),
@@ -80,12 +88,12 @@ class _HomeViewState extends State<HomeView> {
               Expanded(
                 child: _selectedIndex == 0
                     ? AppButton.primary(
-                        text: 'Home',
+                        text: context.l10n.home_view_home_button,
                         icon: Icons.home,
                         onPressed: () {},
                       )
                     : AppButton.outlined(
-                        text: 'Home',
+                        text: context.l10n.home_view_home_button,
                         icon: Icons.home,
                         onPressed: () {
                           setState(() => _selectedIndex = 0);
@@ -96,12 +104,12 @@ class _HomeViewState extends State<HomeView> {
               Expanded(
                 child: _selectedIndex == 1
                     ? AppButton.primary(
-                        text: 'Profile',
+                        text: context.l10n.home_view_profile_button,
                         icon: Icons.person,
                         onPressed: () {},
                       )
                     : AppButton.outlined(
-                        text: 'Profile',
+                        text: context.l10n.home_view_profile_button,
                         icon: Icons.person,
                         onPressed: () {
                           setState(() => _selectedIndex = 1);

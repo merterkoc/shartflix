@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shartflix/bloc/user/user_bloc.dart';
 import 'package:shartflix/core/router/go_router.dart';
 import 'package:shartflix/core/settings/settings_controller.dart';
 import 'package:shartflix/core/theme/blue/blue_theme.dart';
@@ -8,7 +9,6 @@ import 'package:shartflix/core/theme/default/default_theme.dart';
 import 'package:shartflix/core/theme/green/green_theme.dart';
 import 'package:shartflix/core/theme/material_theme.dart';
 import 'package:shartflix/core/theme/pink/pink_theme.dart';
-import 'package:shartflix/feature/login/bloc/user_bloc.dart';
 import 'package:shartflix/repository/user_repository.dart';
 import 'package:shartflix/ui/app_ui.dart';
 

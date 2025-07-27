@@ -3,17 +3,17 @@ part of 'login_validation_bloc.dart';
 class LoginValidationState extends Equatable {
   const LoginValidationState({
     this.email = const EmailInput.pure(),
-    this.password = const PasswordInput.pure(),
+    this.password = const LoginPasswordInput.pure(),
     this.status = false,
   });
 
   final EmailInput email;
-  final PasswordInput password;
+  final LoginPasswordInput password;
   final bool status;
 
   LoginValidationState copyWith({
     EmailInput? email,
-    PasswordInput? password,
+    LoginPasswordInput? password,
     bool? status,
   }) {
     return LoginValidationState(

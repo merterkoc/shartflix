@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shartflix/bloc/user/user_bloc.dart';
 import 'package:shartflix/core/router/shell_view/shell_view.dart';
 import 'package:shartflix/feature/home/view/home_view.dart';
-import 'package:shartflix/feature/login/bloc/user_bloc.dart';
 import 'package:shartflix/feature/login/view/login_view.dart';
 import 'package:shartflix/feature/not_found/view/not_found_view.dart';
 import 'package:shartflix/feature/register/view/register_view.dart';
@@ -91,8 +91,8 @@ class AppRouter {
             ),
             redirect: (context, state) {
               final userState = context.read<UserBloc>().state;
-              if (userState is UserRegisterSuccess &&
-                  userState.user.photoUrl.isEmpty) {
+              if (userState.userResponse.status.isSuccess &&
+                  userState.userResponse.data!.photoUrl.isEmpty) {
                 return '/home/photo-upload';
               }
               return null;
@@ -103,7 +103,7 @@ class AppRouter {
                 name: AppRoute.photoUpload.name,
                 pageBuilder: (context, state) => MaterialPage(
                   name: state.name,
-                  child: const UploadPhotoView(),
+                  child: const PhotoUploadView(),
                 ),
               ),
             ],

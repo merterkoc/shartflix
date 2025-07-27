@@ -1,107 +1,137 @@
-import 'package:flutter/material.dart';
-import 'package:shartflix/core/widget/button/app_button.dart';
-import 'package:shartflix/ui/app_ui.dart';
 import 'dart:io';
 
-class UploadPhotoView extends StatefulWidget {
-  const UploadPhotoView({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shartflix/bloc/user/user_bloc.dart';
+import 'package:shartflix/core/extensions/context_ext.dart';
+import 'package:shartflix/core/widget/app_error_bottom_sheet.dart';
+import 'package:shartflix/core/widget/button/app_button.dart';
+import 'package:shartflix/core/widget/logo_box.dart';
+
+class PhotoUploadView extends StatefulWidget {
+  const PhotoUploadView({super.key});
 
   @override
-  State<UploadPhotoView> createState() => _UploadPhotoViewState();
+  State<PhotoUploadView> createState() => _PhotoUploadViewState();
 }
 
-class _UploadPhotoViewState extends State<UploadPhotoView> {
-  File? _selectedImage;
-  bool _isLoading = false;
+class _PhotoUploadViewState extends State<PhotoUploadView> {
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImage() async {
-
-  }
-
-  void _uploadPhoto() async {
-    setState(() => _isLoading = true);
-    // Fotoğraf yükleme işlemi burada yapılacak
-    await Future.delayed(const Duration(seconds: 2)); // Simülasyon
-    setState(() => _isLoading = false);
-    // Başarılıysa bir sonraki sayfaya yönlendirme veya mesaj
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(
+      source: source,
+      imageQuality: 20,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Fotoğraf Yükle',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Profil fotoğrafınızı yükleyin',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: _selectedImage == null
-                        ? Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(60),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 2,
-                              ),
-                            ),
-                            child: const Icon(Icons.add_a_photo, size: 40),
-                          )
-                        : ClipOval(
-                            child: Image.file(
-                              _selectedImage!,
-                              width: 120,
-                              height: 120,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    _selectedImage == null
-                        ? 'Bir fotoğraf seçmek için tıklayın'
-                        : 'Seçilen fotoğraf',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 32,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.paddingXLarge),
-                child: AppButton.primary(
-                  text: 'Fotoğraf Yükle',
+    return BlocListener<UserBloc, UserState>(
+      listenWhen: (state, previous) =>
+          state.uploadProfilePictureResponse.status !=
+          previous.uploadProfilePictureResponse.status,
+      listener: (context, state) {
+        if (state.uploadProfilePictureResponse.status.isSuccess) {
+          context.pop();
+        } else if (state.uploadProfilePictureResponse.status.isError) {
+          if (state.uploadProfilePictureResponse.statusCode == 413) {
+            showAppErrorBottomSheet(
+              context: context,
+              title: context.l10n.upload_failed_title,
+              message: context.l10n.upload_failed_image_too_large,
+            );
+          } else {
+            showAppErrorBottomSheet(
+              context: context,
+              title: context.l10n.upload_failed_title,
+              message:
+                  state.uploadProfilePictureResponse.message ??
+                  context.l10n.upload_failed_unknown_error,
+            );
+          }
+        }
+      },
+      child: Scaffold(
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: BlocBuilder<UserBloc, UserState>(
+              buildWhen: (state, previous) =>
+                  state.uploadProfilePictureResponse.status !=
+                  previous.uploadProfilePictureResponse.status,
+              builder: (context, state) {
+                return AppButton.primary(
+                  isLoading:
+                      state.uploadProfilePictureResponse.status.isLoading,
+                  onPressed: _imageFile == null
+                      ? null
+                      : () {
+                          context.read<UserBloc>().add(
+                            UploadProfilePictureRequested(file: _imageFile!),
+                          );
+                        },
+                  text: context.l10n.photo_upload_next_button,
                   width: double.infinity,
-                  isLoading: _isLoading,
-                  onPressed: _selectedImage == null || _isLoading ? null : _uploadPhoto,
-                ),
-              ),
+                );
+              },
             ),
-          ],
+          ),
+        ),
+        appBar: AppBar(title: Text(context.l10n.photo_upload_title)),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              spacing: 20,
+              children: [
+                Text(
+                  context.l10n.photo_upload_title,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  context.l10n.photo_upload_subtitle,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                if (_imageFile != null)
+                  InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () => _pickImage(ImageSource.gallery),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.file(
+                        _imageFile!,
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                else
+                  SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: LogoBox(
+                      onPressed: () => _pickImage(ImageSource.gallery),
+                      icon: Icons.add,
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
-} 
+}

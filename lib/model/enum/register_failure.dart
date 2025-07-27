@@ -1,7 +1,9 @@
 enum RegisterFailure {
   unknownError('UNKNOWN_ERROR'),
   userExist('USER_EXISTS'),
-  invalidEmail('INVALID_EMAIL');
+  passwordTooShort('PASSWORD_TOO_SHORT'),
+  noPasswordMatch('NO_PASSWORD_MATCH'),
+  invalidEmail('INVALID_EMAIL_FORMAT');
 
   const RegisterFailure(this.value);
 

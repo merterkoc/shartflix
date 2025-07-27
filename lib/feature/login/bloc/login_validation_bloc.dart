@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:shartflix/feature/register/bloc/email_input.dart';
-import 'package:shartflix/feature/register/bloc/password_input.dart';
+import 'package:shartflix/core/form_validation/email_input.dart';
+import 'package:shartflix/core/form_validation/login_password_input.dart';
+import 'package:shartflix/core/form_validation/password_input.dart';
 
 part 'login_validation_event.dart';
 
@@ -32,7 +33,7 @@ class LoginValidationBloc
     LoginPasswordChanged event,
     Emitter<LoginValidationState> emit,
   ) {
-    final password = PasswordInput.dirty(event.password);
+    final password = LoginPasswordInput.dirty(event.password);
     emit(
       state.copyWith(
         password: password,

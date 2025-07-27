@@ -14,6 +14,9 @@ enum RequestState {
   /// Request is error
   error;
 
+  bool get isInitialized =>
+      this == RequestState.initialized || this == RequestState.notInitialized;
+
   bool get isNotInitialized =>
       this == RequestState.notInitialized || this == RequestState.initialized;
 

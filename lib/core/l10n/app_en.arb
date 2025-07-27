@@ -13,6 +13,7 @@
   "login_view_register_button": "Kayıt ol",
   "login_view_register_prompt": "Hesabınız yok mu?",
   "login_view_error_title": "Giriş Hatası",
+  "login_view_error_unknown": "Login failed due to an unknown error.",
   "login_view_error_message": "Login failed. Please check your credentials and try again.",
   "@login_view_error_message": {
     "description": "Static error message shown when login fails.",
@@ -53,5 +54,38 @@
   "register_passwords_do_not_match": "Passwords do not match",
   "register_error_user_exists": "An account with this email already exists.",
   "register_error_invalid_email": "Invalid email address.",
-  "register_error_unknown": "An unknown error occurred. Please try again."
+  "register_error_unknown": "An unknown error occurred. Please try again.",
+  "photo_upload_title": "Upload Photo",
+  "photo_upload_subtitle": "Choose a photo to upload",
+  "photo_upload_gallery": "Gallery",
+  "photo_upload_camera": "Camera",
+  "photo_upload_save_button": "Save Photo",
+  "photo_upload_success": "Photo uploaded successfully!",
+  "photo_upload_next_button": "Next",
+  "home_view_title": "Home Page",
+  "home_view_profile_title": "Profile",
+  "home_view_home_button": "Home",
+  "home_view_profile_button": "Profile",
+  "home_view_dark_light_tooltip": "Dark/Light",
+  "home_view_change_theme_tooltip": "Change Theme Color",
+  "profile_view_add_photo_button": "Add Photo",
+  "profile_view_id_label": "ID: {id}",
+  "@profile_view_id_label": {
+    "description": "User ID label with placeholder",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "upload_failed_title": "Upload Failed",
+  "upload_failed_image_too_large": "The image is too large. Please select a smaller image.",
+  "upload_failed_unknown_error": "An error occurred while uploading the photo.",
+  "fetch_user_failed": "Failed to fetch user profile",
+  "login_failed": "Login failed",
+  "profile_picture_upload_failed": "Profile picture upload failed",
+  "unknown_error": "Unknown error",
+  "connection_timeout": "Connection timeout",
+  "error_no_password_match": "Passwords do not match",
+  "error_unknown": "An unknown error occurred"
 }

@@ -1,7 +1,14 @@
 part of 'user_bloc.dart';
 
-abstract class UserEvent extends Equatable {
+sealed class UserEvent extends Equatable {
   const UserEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchUser extends UserEvent {
+  const FetchUser();
 
   @override
   List<Object?> get props => [];
@@ -15,13 +22,6 @@ class LoginRequested extends UserEvent {
 
   @override
   List<Object?> get props => [email, password];
-}
-
-class LogoutRequested extends UserEvent {
-  const LogoutRequested();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class RegisterRequested extends UserEvent {
@@ -39,4 +39,20 @@ class RegisterRequested extends UserEvent {
 
   @override
   List<Object?> get props => [name, email, password, confirmPassword];
+}
+
+class UploadProfilePictureRequested extends UserEvent {
+  const UploadProfilePictureRequested({required this.file});
+
+  final File file;
+
+  @override
+  List<Object?> get props => [file];
+}
+
+class LogoutRequested extends UserEvent {
+  const LogoutRequested();
+
+  @override
+  List<Object?> get props => [];
 }
