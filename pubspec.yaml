@@ -20,7 +20,9 @@ dependencies:
   flutter_dotenv: ^5.2.1
   flutter_localizations:
     sdk: flutter
+  flutter_native_splash: ^2.4.0
   flutter_secure_storage: ^9.2.4
+  flutter_launcher_icons: ^0.13.1
   font_awesome_flutter: ^10.7.0
   formz: ^0.8.0
   freezed: ^3.2.0
@@ -56,3 +58,21 @@ flutter:
     - assets/images/
     - .env
     - assets/lottie/
+
+flutter_native_splash:
+  color: "#000000"
+  image: assets/images/sin_flix_splash.png
+  image_dark: assets/images/sin_flix_splash.png
+  color_dark: "#000000"
+  android_12:
+    image: assets/images/sin_flix_splash.png
+    icon_background_color: "#000000"
+    image_dark: assets/images/sin_flix_splash.png
+    icon_background_color_dark: "#000000"
+  web: false
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/sin_flix_logo.png"
+  min_sdk_android: 21
