@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/bloc/user/user_bloc.dart';
 import 'package:shartflix/core/router/shell_view/shell_view.dart';
 import 'package:shartflix/feature/home/view/home_view.dart';
@@ -10,6 +11,7 @@ import 'package:shartflix/feature/not_found/view/not_found_view.dart';
 import 'package:shartflix/feature/register/view/register_view.dart';
 import 'package:shartflix/feature/upload_photo/view/upload_photo_view.dart';
 import 'package:shartflix/http/dio/token_storage/token_storage.dart';
+import 'package:shartflix/repository/movie_repository.dart';
 
 /// Rooter Navigator Key
 final GlobalKey<NavigatorState> rooterNavigatorKey =
@@ -87,7 +89,14 @@ class AppRouter {
             name: AppRoute.home.name,
             pageBuilder: (context, state) => MaterialPage(
               name: state.name,
-              child: const HomeView(),
+                              child: BlocProvider(
+                  create: (context) => MovieBloc(MovieRepository())
+                    ..add(
+                      const FetchFavoriteMovies(),
+                    )
+                    ..add(const FetchMovies(page: 1)),
+                  child: const HomeView(),
+                ),
             ),
             redirect: (context, state) {
               final userState = context.read<UserBloc>().state;

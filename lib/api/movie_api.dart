@@ -3,7 +3,7 @@ import 'package:shartflix/api/interface/i_api_provider.dart';
 class MovieApi extends ApiProvider {
   MovieApi()
     : super(
-        HttpConst.userPath,
+        HttpConst.moviePath,
       );
 
   Future<ResponseEntity<dynamic>> favoriteMovie({
@@ -20,22 +20,31 @@ class MovieApi extends ApiProvider {
     CancelToken? cancelToken,
   }) async {
     final response = await get(
-      resource: 'favorite',
+      resource: 'favorites',
       cancelToken: cancelToken,
     );
-
-    final favoriteMovies = (response.data as List)
+    if (response.statusCode == 404) {
+      return ResponseEntity.success(
+        statusCode: response.statusCode,
+        data: [],
+      );
+    } else if (response.statusCode != 200) {
+      return ResponseEntity.error(
+        statusCode: response.statusCode,
+        message: 'Failed to fetch favorite movies',
+      );
+    }
+    final favoriteMovies = (response.data['data'] as List)
         .map((e) => e as Map<String, dynamic>)
         .toList();
 
     return ResponseEntity.success(
       statusCode: response.statusCode,
-
       data: favoriteMovies,
     );
   }
 
-  Future<ResponseEntity<List<dynamic>>> getMovies({
+  Future<ResponseEntity<dynamic>> getMovies({
     CancelToken? cancelToken,
   }) async {
     final response = await get(
@@ -43,13 +52,16 @@ class MovieApi extends ApiProvider {
       cancelToken: cancelToken,
     );
 
-    final movies = (response.data as List)
-        .map((e) => e as Map<String, dynamic>)
-        .toList();
+    if( response.statusCode == 404) {
+      return ResponseEntity.success(
+        statusCode: response.statusCode,
+        data: [],
+      );
+    }
 
     return ResponseEntity.success(
       statusCode: response.statusCode,
-      data: movies,
+      data: response.data,
     );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/bloc/user/user_bloc.dart';
 import 'package:shartflix/core/extensions/context_ext.dart';
 import 'package:shartflix/core/router/go_router.dart';
+import 'package:shartflix/feature/home/widget/movie_card.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class ProfileView extends StatelessWidget {
@@ -13,12 +15,15 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(AppSpacing.paddingSmall),
-          child: Column(
-            children: [
-              _buildUserInfoCard(state, context),
-            ],
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.paddingSmall),
+            child: Column(
+              children: [
+                _buildUserInfoCard(state, context),
+                _buildFavoritesMoviesSection(context),
+              ],
+            ),
           ),
         );
       },
@@ -87,6 +92,55 @@ class ProfileView extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+
+  BlocBuilder<MovieBloc, MovieState> _buildFavoritesMoviesSection(
+    BuildContext context,
+  ) {
+    return BlocBuilder<MovieBloc, MovieState>(
+      buildWhen: (state, previous) =>
+          state.favoriteMoviesResponse.status !=
+          previous.favoriteMoviesResponse.status,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Beğenilen Filmler',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (state.favoriteMoviesResponse.data?.isEmpty ?? true)
+                const Text(
+                  'Beğenilen film bulunmamaktadır.',
+                )
+              else
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.5,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                  ),
+                  itemCount: state.favoriteMoviesResponse.data?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final movie = state.favoriteMoviesResponse.data![index];
+                    return MovieCard(
+                      movie: movie,
+                    );
+                  },
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
