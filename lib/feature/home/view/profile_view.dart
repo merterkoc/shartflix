@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,48 +9,115 @@ import 'package:shartflix/core/router/go_router.dart';
 import 'package:shartflix/feature/home/widget/movie_card.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
 
   @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  Completer<void>? _refreshCompleter;
+  bool _isUserLoaded = false;
+  bool _isFavoritesLoaded = false;
+
+  void _checkRefreshComplete() {
+    if (_isUserLoaded && _isFavoritesLoaded && _refreshCompleter != null) {
+      _refreshCompleter!.complete();
+      _refreshCompleter = null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.paddingSmall),
-            child: Column(
-              children: [
-                BlocBuilder<UserBloc, UserState>(
-                  buildWhen: (state, previous) =>
-                      state.userResponse.status != previous.userResponse.status,
-                  builder: (context, state) {
-                    if (!state.userResponse.status.isSuccess) {
-                      return const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      );
-                    }
-                    return _buildUserInfoCard(state, context);
-                  },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UserBloc, UserState>(
+          listenWhen: (previous, current) =>
+              previous.userResponse.status != current.userResponse.status,
+          listener: (context, state) {
+            if (state.userResponse.status.isSuccess ||
+                state.userResponse.status.isError) {
+              _isUserLoaded = true;
+              _checkRefreshComplete();
+            }
+          },
+        ),
+        BlocListener<MovieBloc, MovieState>(
+          listenWhen: (previous, current) =>
+              previous.favoriteMoviesResponse.status !=
+              current.favoriteMoviesResponse.status,
+          listener: (context, state) {
+            if (state.favoriteMoviesResponse.status.isSuccess ||
+                state.favoriteMoviesResponse.status.isError) {
+              _isFavoritesLoaded = true;
+              _checkRefreshComplete();
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  _refreshCompleter = Completer<void>();
+                  _isUserLoaded = false;
+                  _isFavoritesLoaded = false;
+
+                  context.read<UserBloc>().add(const FetchUser());
+                  context.read<MovieBloc>().add(const FetchFavoriteMovies());
+
+                  return _refreshCompleter!.future;
+                },
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(AppSpacing.paddingSmall),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    BlocBuilder<UserBloc, UserState>(
+                      buildWhen: (state, previous) =>
+                          state.userResponse.status !=
+                          previous.userResponse.status,
+                      builder: (context, state) {
+                        if (!state.userResponse.status.isSuccess &&
+                            state.userResponse.data == null) {
+                          return const SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                          );
+                        }
+                        return _buildUserInfoCard(state, context);
+                      },
+                    ),
+                    BlocBuilder<MovieBloc, MovieState>(
+                      buildWhen: (state, previous) =>
+                          state.favoriteMoviesResponse.status !=
+                          previous.favoriteMoviesResponse.status,
+                      builder: (context, state) {
+                        if (!state.favoriteMoviesResponse.status.isSuccess &&
+                            state.favoriteMoviesResponse.data == null) {
+                          return const SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                          );
+                        }
+                        return _buildFavoritesMoviesSection(context);
+                      },
+                    ),
+                  ]),
                 ),
-                BlocBuilder<MovieBloc, MovieState>(
-                  buildWhen: (state, previous) =>
-                      state.favoriteMoviesResponse.status !=
-                      previous.favoriteMoviesResponse.status,
-                  builder: (context, state) {
-                    if (!state.favoriteMoviesResponse.status.isSuccess) {
-                      return const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      );
-                    }
-                    return _buildFavoritesMoviesSection(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
