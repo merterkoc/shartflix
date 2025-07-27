@@ -192,7 +192,7 @@ abstract class IDioClient {
       return Future.value(
         ResponseEntity<T>.error(
           statusCode: 601,
-          message: 'Unknown error',
+          message: 'UNKNOWN_ERROR',
         ),
       );
     }
@@ -207,8 +207,8 @@ abstract class IDioClient {
       final message = dataResponse is Map<String, dynamic>
           ? ((dataResponse['response'] as Map<String, dynamic>)['message']??
                 dataResponse['error'] ??
-                'Unknown error')
-          : 'Unknown error';
+                'UNKNOWN_ERROR')
+          : 'UNKNOWN_ERROR';
       return Future.value(
         ResponseEntity<T>.error(
           statusCode: error.response!.statusCode!,
@@ -227,15 +227,14 @@ abstract class IDioClient {
         return Future.value(
           ResponseEntity<T>.error(
             statusCode: 408,
-
-            message: 'Connection timeout',
+            message: 'CONNECTION_TIMEOUT',
           ),
         );
       } else {
         return Future.value(
           ResponseEntity<T>.error(
             statusCode: 601,
-            message: 'Unknown error',
+            message: 'UNKNOWN_ERROR',
           ),
         );
       }

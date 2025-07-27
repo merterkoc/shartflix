@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shartflix/core/widget/auth_screen_promt.dart';
+import 'package:shartflix/bloc/user/user_bloc.dart';
+import 'package:shartflix/core/widget/auth_screen_prompt.dart';
 import 'package:shartflix/core/widget/logo_row.dart';
-import 'package:shartflix/feature/login/bloc/user_bloc.dart';
-import 'package:shartflix/feature/register/bloc/email_input.dart';
-import 'package:shartflix/feature/register/bloc/name_input.dart';
-import 'package:shartflix/feature/register/bloc/password_input.dart';
 import 'package:shartflix/feature/register/bloc/register_bloc.dart';
-import 'package:shartflix/ui/app_ui.dart';
+import 'package:shartflix/feature/register/widget/register_agreement.dart';
+import 'package:shartflix/feature/register/widget/register_form.dart';
+import 'package:shartflix/feature/register/widget/register_header.dart';
 import 'package:shartflix/model/enum/register_failure.dart';
-import 'package:shartflix/core/widget/app_error_bottom_sheet.dart';
+import 'package:shartflix/ui/app_ui.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -50,15 +49,19 @@ class _RegisterViewState extends State<RegisterView> {
         create: (_) => RegisterBloc(),
         child: BlocListener<UserBloc, UserState>(
           listener: (context, state) {
-            if (state is UserRegisterFailure) {
-              String errorMessage;
-              switch (state.registerFailure) {
+            if (state.userResponse.status.isError) {
+              late final String errorMessage;
+              switch (RegisterFailure.fromCode(state.userResponse.message!)) {
                 case RegisterFailure.userExist:
                   errorMessage = context.l10n.register_error_user_exists;
                 case RegisterFailure.invalidEmail:
                   errorMessage = context.l10n.register_error_invalid_email;
                 case RegisterFailure.unknownError:
                   errorMessage = context.l10n.register_error_unknown;
+                case RegisterFailure.passwordTooShort:
+                  errorMessage = 'Password must be at least 6 characters long.';
+                case RegisterFailure.noPasswordMatch:
+                  errorMessage = 'Passwords do not match.';
               }
               showAppErrorBottomSheet(
                 context: context,
@@ -86,397 +89,23 @@ class _RegisterViewState extends State<RegisterView> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              context.l10n.register_view_title,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                            const RegisterHeader(),
+                            RegisterForm(
+                              nameController: _nameController,
+                              emailController: _emailController,
+                              passwordController: _passwordController,
+                              confirmPasswordController:
+                                  _confirmPasswordController,
+                              nameFocus: _nameFocus,
+                              emailFocus: _emailFocus,
+                              passwordFocus: _passwordFocus,
+                              confirmPasswordFocus: _confirmPasswordFocus,
                             ),
-                            Text(
-                              context.l10n.register_view_subtitle,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 46),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.ease,
-                              margin: EdgeInsets.only(
-                                bottom:
-                                    (formState.name.isNotValid &&
-                                        formState.name.error ==
-                                            NameValidationError.empty &&
-                                        !formState.name.isPure)
-                                    ? 8
-                                    : 0,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppTextField(
-                                    controller: _nameController,
-                                    hintText:
-                                        context.l10n.register_view_name_hint,
-                                    prefixIcon: const Icon(
-                                      Icons.person_outline,
-                                    ),
-                                    keyboardType: TextInputType.name,
-                                    focusNode: _nameFocus,
-                                    textInputAction: TextInputAction.next,
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(
-                                        context,
-                                      ).requestFocus(_emailFocus);
-                                    },
-                                    onChanged: (value) => context
-                                        .read<RegisterBloc>()
-                                        .add(RegisterNameChanged(value)),
-                                  ),
-                                  AnimatedOpacity(
-                                    opacity:
-                                        (formState.name.isNotValid &&
-                                            formState.name.error ==
-                                                NameValidationError.empty &&
-                                            !formState.name.isPure)
-                                        ? 1.0
-                                        : 0.0,
-                                    duration: const Duration(milliseconds: 250),
-                                    child:
-                                        (formState.name.isNotValid &&
-                                            formState.name.error ==
-                                                NameValidationError.empty &&
-                                            !formState.name.isPure)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2,
-                                              left: 8,
-                                            ),
-                                            child: Text(
-                                              context.l10n.register_name_empty,
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.ease,
-                              margin: EdgeInsets.only(
-                                bottom:
-                                    ((formState.email.isNotValid &&
-                                            formState.email.error ==
-                                                EmailValidationError.empty &&
-                                            !formState.email.isPure) ||
-                                        (formState.email.isNotValid &&
-                                            formState.email.error ==
-                                                EmailValidationError.invalid &&
-                                            !formState.email.isPure))
-                                    ? 8
-                                    : 0,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppTextField(
-                                    controller: _emailController,
-                                    hintText:
-                                        context.l10n.register_view_email_hint,
-                                    prefixIcon: const Icon(
-                                      FontAwesomeIcons.envelope,
-                                    ),
-                                    keyboardType: TextInputType.emailAddress,
-                                    focusNode: _emailFocus,
-                                    textInputAction: TextInputAction.next,
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(
-                                        context,
-                                      ).requestFocus(_passwordFocus);
-                                    },
-                                    onChanged: (value) => context
-                                        .read<RegisterBloc>()
-                                        .add(RegisterEmailChanged(value)),
-                                    autofillHints: const [AutofillHints.email],
-                                  ),
-                                  AnimatedOpacity(
-                                    opacity:
-                                        (formState.email.isNotValid &&
-                                            formState.email.error ==
-                                                EmailValidationError.empty &&
-                                            !formState.email.isPure)
-                                        ? 1.0
-                                        : 0.0,
-                                    duration: const Duration(milliseconds: 250),
-                                    child:
-                                        (formState.email.isNotValid &&
-                                            formState.email.error ==
-                                                EmailValidationError.empty &&
-                                            !formState.email.isPure)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2,
-                                              left: 8,
-                                            ),
-                                            child: Text(
-                                              context.l10n.register_email_empty,
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ),
-                                  AnimatedOpacity(
-                                    opacity:
-                                        (formState.email.isNotValid &&
-                                            formState.email.error ==
-                                                EmailValidationError.invalid &&
-                                            !formState.email.isPure)
-                                        ? 1.0
-                                        : 0.0,
-                                    duration: const Duration(milliseconds: 250),
-                                    child:
-                                        (formState.email.isNotValid &&
-                                            formState.email.error ==
-                                                EmailValidationError.invalid &&
-                                            !formState.email.isPure)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2,
-                                              left: 8,
-                                            ),
-                                            child: Text(
-                                              context
-                                                  .l10n
-                                                  .register_email_invalid,
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.ease,
-                              margin: EdgeInsets.only(
-                                bottom:
-                                    ((formState.password.isNotValid &&
-                                            formState.password.error ==
-                                                PasswordValidationError.empty &&
-                                            !formState.password.isPure) ||
-                                        (formState.password.isNotValid &&
-                                            formState.password.error ==
-                                                PasswordValidationError
-                                                    .tooShort &&
-                                            !formState.password.isPure))
-                                    ? 8
-                                    : 0,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppPasswordField(
-                                    controller: _passwordController,
-                                    hintText: context
-                                        .l10n
-                                        .register_view_password_hint,
-                                    focusNode: _passwordFocus,
-                                    textInputAction: TextInputAction.next,
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(
-                                        context,
-                                      ).requestFocus(_confirmPasswordFocus);
-                                    },
-                                    onChanged: (value) => context
-                                        .read<RegisterBloc>()
-                                        .add(RegisterPasswordChanged(value)),
-                                    autofillHints: const [
-                                      AutofillHints.newPassword,
-                                    ],
-                                  ),
-                                  AnimatedOpacity(
-                                    opacity:
-                                        (formState.password.isNotValid &&
-                                            formState.password.error ==
-                                                PasswordValidationError.empty &&
-                                            !formState.password.isPure)
-                                        ? 1.0
-                                        : 0.0,
-                                    duration: const Duration(milliseconds: 250),
-                                    child:
-                                        (formState.password.isNotValid &&
-                                            formState.password.error ==
-                                                PasswordValidationError.empty &&
-                                            !formState.password.isPure)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2,
-                                              left: 8,
-                                            ),
-                                            child: Text(
-                                              context
-                                                  .l10n
-                                                  .register_password_empty,
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ),
-                                  AnimatedOpacity(
-                                    opacity:
-                                        (formState.password.isNotValid &&
-                                            formState.password.error ==
-                                                PasswordValidationError
-                                                    .tooShort &&
-                                            !formState.password.isPure)
-                                        ? 1.0
-                                        : 0.0,
-                                    duration: const Duration(milliseconds: 250),
-                                    child:
-                                        (formState.password.isNotValid &&
-                                            formState.password.error ==
-                                                PasswordValidationError
-                                                    .tooShort &&
-                                            !formState.password.isPure)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2,
-                                              left: 8,
-                                            ),
-                                            child: Text(
-                                              context
-                                                  .l10n
-                                                  .register_password_min_length,
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.ease,
-                              margin: EdgeInsets.only(
-                                bottom:
-                                    (!formState.confirmPassword.isPure &&
-                                        formState.confirmPassword.value !=
-                                            formState.password.value)
-                                    ? 8
-                                    : 0,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppPasswordField(
-                                    controller: _confirmPasswordController,
-                                    hintText: context
-                                        .l10n
-                                        .register_view_confirm_password_hint,
-                                    focusNode: _confirmPasswordFocus,
-                                    textInputAction: TextInputAction.done,
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(context).unfocus();
-                                    },
-                                    onChanged: (value) =>
-                                        context.read<RegisterBloc>().add(
-                                          RegisterConfirmPasswordChanged(value),
-                                        ),
-                                    autofillHints: const [
-                                      AutofillHints.newPassword,
-                                    ],
-                                  ),
-                                  AnimatedOpacity(
-                                    opacity:
-                                        (!formState.confirmPassword.isPure &&
-                                            formState.confirmPassword.value !=
-                                                formState.password.value)
-                                        ? 1.0
-                                        : 0.0,
-                                    duration: const Duration(milliseconds: 250),
-                                    child:
-                                        (!formState.confirmPassword.isPure &&
-                                            formState.confirmPassword.value !=
-                                                formState.password.value)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2,
-                                              left: 8,
-                                            ),
-                                            child: Text(
-                                              context
-                                                  .l10n
-                                                  .register_passwords_do_not_match,
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: context
-                                          .l10n
-                                          .register_view_agreement_prefix,
-                                      style: const TextStyle(fontSize: 13),
-                                    ),
-                                    TextSpan(
-                                      text: context
-                                          .l10n
-                                          .register_view_agreement_bold,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        decoration: TextDecoration.underline,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: context
-                                          .l10n
-                                          .register_view_agreement_suffix,
-                                      style: const TextStyle(fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
+                            const RegisterAgreement(),
                             BlocBuilder<UserBloc, UserState>(
                               builder: (context, state) {
-                                final isLoading = state is UserLoading;
+                                final isLoading =
+                                    state.userResponse.status.isLoading;
                                 return AppButton.primary(
                                   text: context.l10n.register_view_button,
                                   width: double.infinity,

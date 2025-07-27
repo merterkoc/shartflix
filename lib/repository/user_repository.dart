@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shartflix/api/user_api.dart';
 import 'package:shartflix/repository/interface/i_repository.dart';
@@ -38,11 +40,11 @@ class UserRepository extends IRepository {
   }
 
   Future<ResponseEntity<dynamic>> uploadProfilePicture({
-    required String filePath,
+    required File file,
     CancelToken? cancelToken,
   }) async {
     return _userApi.uploadProfilePicture(
-      filePath: filePath,
+      file: file,
       cancelToken: cancelToken,
     );
   }

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shartflix/core/widget/auth_screen_promt.dart';
+import 'package:shartflix/bloc/user/user_bloc.dart';
+import 'package:shartflix/core/form_validation/email_input.dart';
+import 'package:shartflix/core/form_validation/login_password_input.dart';
+import 'package:shartflix/core/widget/auth_screen_prompt.dart';
 import 'package:shartflix/core/widget/logo_row.dart';
-import 'package:shartflix/core/widget/text_field/app_password_field.dart';
-import 'package:shartflix/core/widget/text_field/app_text_field.dart';
 import 'package:shartflix/feature/login/bloc/login_validation_bloc.dart';
-import 'package:shartflix/feature/login/bloc/user_bloc.dart';
-import 'package:shartflix/feature/register/bloc/email_input.dart';
-import 'package:shartflix/feature/register/bloc/password_input.dart';
+import 'package:shartflix/model/enum/login_failure.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class LoginView extends StatefulWidget {
@@ -45,11 +43,21 @@ class _LoginViewState extends State<LoginView> {
         ],
         child: BlocListener<UserBloc, UserState>(
           listener: (context, state) {
-            if (state is UserFailure) {
+            if (state.userResponse.status.isError) {
+              String errorMessage;
+              final failure = LoginFailure.fromCode(
+                state.userResponse.message!,
+              );
+              switch (failure) {
+                case LoginFailure.unknownError:
+                  errorMessage = context.l10n.login_view_error_unknown;
+                case LoginFailure.invalidCredentials:
+                  errorMessage = context.l10n.login_view_error_message;
+                }
               showAppErrorBottomSheet(
                 context: context,
                 title: context.l10n.login_view_error_title,
-                message: context.l10n.login_view_error_message,
+                message: errorMessage,
                 icon: Icons.error_outline,
               );
             }
@@ -121,7 +129,6 @@ class _LoginViewState extends State<LoginView> {
                                         context,
                                       ).requestFocus(_passwordFocus);
                                     },
-                                    autofocus: false,
                                     onChanged: (value) => context
                                         .read<LoginValidationBloc>()
                                         .add(LoginEmailChanged(value)),
@@ -198,7 +205,8 @@ class _LoginViewState extends State<LoginView> {
                                 bottom:
                                     (validationState.password.isNotValid &&
                                         validationState.password.error ==
-                                            PasswordValidationError.empty &&
+                                            LoginPasswordValidationError
+                                                .empty &&
                                         !validationState.password.isPure)
                                     ? 8
                                     : 0,
@@ -218,13 +226,16 @@ class _LoginViewState extends State<LoginView> {
                                     onChanged: (value) => context
                                         .read<LoginValidationBloc>()
                                         .add(LoginPasswordChanged(value)),
-                                    autofillHints: const [AutofillHints.password],
+                                    autofillHints: const [
+                                      AutofillHints.password,
+                                    ],
                                   ),
                                   AnimatedOpacity(
                                     opacity:
                                         (validationState.password.isNotValid &&
                                             validationState.password.error ==
-                                                PasswordValidationError.empty &&
+                                                LoginPasswordValidationError
+                                                    .empty &&
                                             !validationState.password.isPure)
                                         ? 1.0
                                         : 0.0,
@@ -232,7 +243,8 @@ class _LoginViewState extends State<LoginView> {
                                     child:
                                         (validationState.password.isNotValid &&
                                             validationState.password.error ==
-                                                PasswordValidationError.empty &&
+                                                LoginPasswordValidationError
+                                                    .empty &&
                                             !validationState.password.isPure)
                                         ? Padding(
                                             padding: const EdgeInsets.only(
@@ -280,7 +292,8 @@ class _LoginViewState extends State<LoginView> {
                             const SizedBox(height: 16),
                             BlocBuilder<UserBloc, UserState>(
                               builder: (context, state) {
-                                final isLoading = state is UserLoading;
+                                final isLoading =
+                                    state.userResponse.status.isLoading;
                                 return AppButton.primary(
                                   text: context.l10n.login_view_login_button,
                                   width: double.infinity,

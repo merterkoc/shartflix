@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:shartflix/feature/register/bloc/email_input.dart';
-import 'package:shartflix/feature/register/bloc/name_input.dart';
-import 'package:shartflix/feature/register/bloc/password_input.dart';
+import 'package:shartflix/core/form_validation/email_input.dart';
+import 'package:shartflix/core/form_validation/name_input.dart';
+import 'package:shartflix/core/form_validation/password_input.dart';
 
 part 'register_event.dart';
 

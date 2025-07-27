@@ -12,7 +12,7 @@ abstract class UserDTO with _$UserDTO {
     required String name,
     required String email,
     required String photoUrl,
-    required String token,
+    String? token,
   }) = _UserDTO;
 
   factory UserDTO.fromJson(Map<String, dynamic> json) =>
