@@ -65,7 +65,7 @@ class _RegisterViewState extends State<RegisterView> {
               }
               showAppErrorBottomSheet(
                 context: context,
-                title: context.l10n.register_view_title,
+                title: context.l10n.register_error_title,
                 message: errorMessage,
                 icon: Icons.error_outline,
               );

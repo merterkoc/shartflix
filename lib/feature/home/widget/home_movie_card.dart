@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shartflix/bloc/movie/movie_bloc.dart';
+import 'package:shartflix/core/settings/settings_controller.dart';
 import 'package:shartflix/model/dto/movie/movie_dto.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
@@ -87,23 +91,42 @@ class _HomeMovieCardState extends State<HomeMovieCard>
           ),
         ),
 
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.transparent,
-                  Theme.of(context).colorScheme.surface.withOpacity(0.6),
-                  Theme.of(context).colorScheme.surface.withOpacity(0.9),
-                ],
-                stops: const [0.0, 0.6, 0.8, 1.0],
+        if (GetIt.instance<SettingsController>().themeMode == Brightness.dark)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.transparent,
+                    Theme.of(context).colorScheme.surface.withOpacity(0.6),
+                    Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                  ],
+                  stops: const [0.0, 0.6, 0.8, 1.0],
+                ),
+              ),
+            ),
+          )
+        else
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Theme.of(context).colorScheme.surface.withOpacity(0.1),
+                    Theme.of(context).colorScheme.surface.withOpacity(0.4),
+                    Theme.of(context).colorScheme.surface.withOpacity(1),
+                  ],
+                  stops: const [0.0, 0.6, 0.8, 1.0],
+                ),
               ),
             ),
           ),
-        ),
 
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +316,9 @@ class _HomeMovieCardState extends State<HomeMovieCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Theme.of(context).colorScheme.primary.withValues(
+          alpha: 0.7,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(

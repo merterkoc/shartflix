@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shartflix/bloc/user/user_bloc.dart';
+import 'package:shartflix/const/spacing/padding.dart';
 import 'package:shartflix/core/extensions/context_ext.dart';
 import 'package:shartflix/core/widget/app_error_bottom_sheet.dart';
 import 'package:shartflix/core/widget/button/app_button.dart';
@@ -86,48 +87,51 @@ class _PhotoUploadViewState extends State<PhotoUploadView> {
             ),
           ),
         ),
-        appBar: AppBar(title: Text(context.l10n.photo_upload_title)),
+        appBar: AppBar(title: Text(context.l10n.profile_details_title)),
         body: SingleChildScrollView(
           child: Center(
-            child: Column(
-              spacing: 20,
-              children: [
-                Text(
-                  context.l10n.photo_upload_title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+              child: Column(
+                spacing: 20,
+                children: [
+                  Text(
+                    context.l10n.photo_upload_title,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  context.l10n.photo_upload_subtitle,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                if (_imageFile != null)
-                  InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: () => _pickImage(ImageSource.gallery),
-                    child: ClipRRect(
+                  Text(
+                    context.l10n.photo_upload_subtitle,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  if (_imageFile != null)
+                    InkWell(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.file(
-                        _imageFile!,
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover,
+                      onTap: () => _pickImage(ImageSource.gallery),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.file(
+                          _imageFile!,
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  else
+                    SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: LogoBox(
+                        onPressed: () => _pickImage(ImageSource.gallery),
+                        icon: Icons.add,
                       ),
                     ),
-                  )
-                else
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: LogoBox(
-                      onPressed: () => _pickImage(ImageSource.gallery),
-                      icon: Icons.add,
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

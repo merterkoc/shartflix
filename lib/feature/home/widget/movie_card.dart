@@ -22,8 +22,12 @@ class MovieCard extends StatelessWidget {
               imageUrl: movie.poster ?? '',
               fit: BoxFit.cover,
               width: double.infinity,
-              errorWidget: (context, url, error) => const Center(
-                child: Text('IMDB blocked this image (Its not my problem)'),
+              errorWidget: (context, url, error) => Center(
+                child: Icon(
+                  Icons.error,
+                  color: Theme.of(context).colorScheme.error,
+                  size: 48,
+                ),
               ),
             ),
           ),

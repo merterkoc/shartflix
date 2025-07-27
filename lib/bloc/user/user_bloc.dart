@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fresh_dio/fresh_dio.dart';
+import 'package:image/image.dart' as img;
 import 'package:shartflix/api/interface/i_api_provider.dart';
 import 'package:shartflix/model/dto/user/user_dto.dart';
 import 'package:shartflix/repository/user_repository.dart';
@@ -85,7 +87,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (response.isOk) {
         final data = response.data as Map<String, dynamic>;
         final user = UserDTO.fromJson(data['data'] as Map<String, dynamic>);
-        userRepository.setToken(OAuth2Token(accessToken: user.token!));
+        await userRepository.setToken(OAuth2Token(accessToken: user.token!));
         emit(
           state.copyWith(
             userResponse: ResponseEntity<UserDTO>.success(data: user),
@@ -141,7 +143,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (response.isOk) {
         final data = response.data as Map<String, dynamic>;
         final user = UserDTO.fromJson(data['data'] as Map<String, dynamic>);
-        userRepository.setToken(OAuth2Token(accessToken: user.token!));
+        await userRepository.setToken(OAuth2Token(accessToken: user.token!));
         emit(
           state.copyWith(
             userResponse: ResponseEntity<UserDTO>.success(data: user),
@@ -179,8 +181,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       ),
     );
     try {
+      final compressedFile = await _compressImage(event.file);
+
       final response = await userRepository.uploadProfilePicture(
-        file: event.file,
+        file: compressedFile,
       );
       if (response.isOk) {
         final data = response.data as Map<String, dynamic>;
@@ -216,6 +220,62 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         ),
       );
       rethrow;
+    }
+  }
+
+  /// Compresses the image to reduce file size while maintaining quality
+  Future<File> _compressImage(File originalFile) async {
+    try {
+      // Read the original image
+      final Uint8List bytes = await originalFile.readAsBytes();
+      final img.Image? originalImage = img.decodeImage(bytes);
+
+      if (originalImage == null) {
+        return originalFile; // Return original if decoding fails
+      }
+
+      // Calculate new dimensions (max width/height of 800px while maintaining aspect ratio)
+      const int maxDimension = 800;
+      int newWidth = originalImage.width;
+      int newHeight = originalImage.height;
+
+      if (originalImage.width > maxDimension ||
+          originalImage.height > maxDimension) {
+        if (originalImage.width > originalImage.height) {
+          newWidth = maxDimension;
+          newHeight =
+              (originalImage.height * maxDimension / originalImage.width)
+                  .round();
+        } else {
+          newHeight = maxDimension;
+          newWidth = (originalImage.width * maxDimension / originalImage.height)
+              .round();
+        }
+      }
+
+      // Resize the image
+      final img.Image resizedImage = img.copyResize(
+        originalImage,
+        width: newWidth,
+        height: newHeight,
+        interpolation: img.Interpolation.linear,
+      );
+
+      // Encode as JPEG with quality 85 (good balance between quality and file size)
+      final Uint8List compressedBytes = img.encodeJpg(
+        resizedImage,
+        quality: 85,
+      );
+
+      // Create a temporary file for the compressed image
+      final String tempPath = '${originalFile.path}_compressed.jpg';
+      final File compressedFile = File(tempPath);
+      await compressedFile.writeAsBytes(compressedBytes);
+
+      return compressedFile;
+    } catch (e) {
+      // If compression fails, return the original file
+      return originalFile;
     }
   }
 
