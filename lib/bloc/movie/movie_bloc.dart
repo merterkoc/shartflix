@@ -34,7 +34,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     try {
       final response = await movieRepository.getMovies(
-        genre: event.genre,
         page: event.page,
       );
       if (response.isOk) {

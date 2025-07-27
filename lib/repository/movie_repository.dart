@@ -5,15 +5,10 @@ class MovieRepository extends IRepository {
   final _userApi = MovieApi();
 
   Future<ResponseEntity<dynamic>> getMovies({
-    required String genre,
     required int page,
     CancelToken? cancelToken,
   }) async {
-    return _userApi.getMovies(
-      page: page,
-      cancelToken: cancelToken
-
-    );
+    return _userApi.getMovies(page: page, cancelToken: cancelToken);
   }
 
   Future<ResponseEntity<dynamic>> getFavoriteMovies({

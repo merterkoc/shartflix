@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
@@ -223,21 +224,34 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  /// Compresses the image to reduce file size while maintaining quality
   Future<File> _compressImage(File originalFile) async {
     try {
-      // Read the original image
-      final Uint8List bytes = await originalFile.readAsBytes();
-      final img.Image? originalImage = img.decodeImage(bytes);
+      final compressedBytes = await _compressImageInIsolate(originalFile);
+
+      // Create a temporary file for the compressed image
+      final tempPath = '${originalFile.path}_compressed.jpg';
+      final compressedFile = File(tempPath);
+      await compressedFile.writeAsBytes(compressedBytes);
+
+      return compressedFile;
+    } on Exception {
+      return originalFile;
+    }
+  }
+
+  Future<Uint8List> _compressImageInIsolate(File originalFile) async {
+    final bytes = await originalFile.readAsBytes();
+
+    return Isolate.run(() {
+      final originalImage = img.decodeImage(bytes);
 
       if (originalImage == null) {
-        return originalFile; // Return original if decoding fails
+        return bytes;
       }
 
-      // Calculate new dimensions (max width/height of 800px while maintaining aspect ratio)
-      const int maxDimension = 800;
-      int newWidth = originalImage.width;
-      int newHeight = originalImage.height;
+      const maxDimension = 800;
+      var newWidth = originalImage.width;
+      var newHeight = originalImage.height;
 
       if (originalImage.width > maxDimension ||
           originalImage.height > maxDimension) {
@@ -253,30 +267,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         }
       }
 
-      // Resize the image
-      final img.Image resizedImage = img.copyResize(
+      final resizedImage = img.copyResize(
         originalImage,
         width: newWidth,
         height: newHeight,
         interpolation: img.Interpolation.linear,
       );
 
-      // Encode as JPEG with quality 85 (good balance between quality and file size)
-      final Uint8List compressedBytes = img.encodeJpg(
+      return img.encodeJpg(
         resizedImage,
         quality: 85,
       );
-
-      // Create a temporary file for the compressed image
-      final String tempPath = '${originalFile.path}_compressed.jpg';
-      final File compressedFile = File(tempPath);
-      await compressedFile.writeAsBytes(compressedBytes);
-
-      return compressedFile;
-    } catch (e) {
-      // If compression fails, return the original file
-      return originalFile;
-    }
+    });
   }
 
   Future<void> _onLogoutRequested(

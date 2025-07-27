@@ -198,12 +198,12 @@ class _HomeMovieCardState extends State<HomeMovieCard>
             ),
 
             Container(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.movie.title ?? 'Unknown Title',
+                    widget.movie.title ?? '',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
@@ -223,13 +223,18 @@ class _HomeMovieCardState extends State<HomeMovieCard>
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .tertiaryContainer
+                                .withValues(
+                                  alpha: 0.4,
+                                ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             widget.movie.year!,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -287,7 +292,6 @@ class _HomeMovieCardState extends State<HomeMovieCard>
                     const SizedBox(height: 12),
                   ],
 
-                  // Movie details (genre, director, runtime)
                   Wrap(
                     spacing: 8,
                     runSpacing: 4,

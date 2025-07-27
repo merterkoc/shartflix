@@ -7,14 +7,12 @@ sealed class MovieEvent extends Equatable {
 class FetchMovies extends MovieEvent {
   const FetchMovies({
     this.page = 1,
-    this.genre = 'all',
   });
 
   final int page;
-  final String genre;
 
   @override
-  List<Object?> get props => [page, genre];
+  List<Object?> get props => [page];
 }
 
 class FetchFavoriteMovies extends MovieEvent {
