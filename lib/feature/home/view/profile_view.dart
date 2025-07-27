@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,63 +59,125 @@ class _ProfileViewState extends State<ProfileView> {
       ],
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  _refreshCompleter = Completer<void>();
-                  _isUserLoaded = false;
-                  _isFavoritesLoaded = false;
+          return Platform.isIOS
+              ? CustomScrollView(
+                  slivers: [
+                    CupertinoSliverRefreshControl(
+                      onRefresh: () async {
+                        _refreshCompleter = Completer<void>();
+                        _isUserLoaded = false;
+                        _isFavoritesLoaded = false;
 
-                  context.read<UserBloc>().add(const FetchUser());
-                  context.read<MovieBloc>().add(const FetchFavoriteMovies());
+                        context.read<UserBloc>().add(const FetchUser());
+                        context.read<MovieBloc>().add(const FetchFavoriteMovies());
 
-                  return _refreshCompleter!.future;
-                },
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    BlocBuilder<UserBloc, UserState>(
-                      buildWhen: (state, previous) =>
-                          state.userResponse.status !=
-                          previous.userResponse.status,
-                      builder: (context, state) {
-                        if (!state.userResponse.status.isSuccess &&
-                            state.userResponse.data == null) {
-                          return const SizedBox(
-                            height: 200,
-                            child: Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          );
-                        }
-                        return _buildUserInfoCard(state, context);
+                        return _refreshCompleter!.future;
                       },
                     ),
-                    BlocBuilder<MovieBloc, MovieState>(
-                      buildWhen: (state, previous) =>
-                          state.favoriteMoviesResponse.status !=
-                          previous.favoriteMoviesResponse.status,
-                      builder: (context, state) {
-                        if (!state.favoriteMoviesResponse.status.isSuccess &&
-                            state.favoriteMoviesResponse.data == null) {
-                          return const SizedBox(
-                            height: 200,
-                            child: Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          );
-                        }
-                        return _buildFavoritesMoviesSection(context);
-                      },
+                    SliverPadding(
+                      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          BlocBuilder<UserBloc, UserState>(
+                            buildWhen: (state, previous) =>
+                                state.userResponse.status !=
+                                previous.userResponse.status,
+                            builder: (context, state) {
+                              if (!state.userResponse.status.isSuccess &&
+                                  state.userResponse.data == null) {
+                                return const SizedBox(
+                                  height: 200,
+                                  child: Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
+                                );
+                              }
+                              return _buildUserInfoCard(state, context);
+                            },
+                          ),
+                          BlocBuilder<MovieBloc, MovieState>(
+                            buildWhen: (state, previous) =>
+                                state.favoriteMoviesResponse.status !=
+                                previous.favoriteMoviesResponse.status,
+                            builder: (context, state) {
+                              if (!state.favoriteMoviesResponse.status.isSuccess &&
+                                  state.favoriteMoviesResponse.data == null) {
+                                return const SizedBox(
+                                  height: 200,
+                                  child: Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
+                                );
+                              }
+                              return _buildFavoritesMoviesSection(context);
+                            },
+                          ),
+                        ]),
+                      ),
                     ),
-                  ]),
-                ),
-              ),
-            ],
-          );
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: SizedBox.shrink(),
+                    ),
+                  ],
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    _refreshCompleter = Completer<void>();
+                    _isUserLoaded = false;
+                    _isFavoritesLoaded = false;
+
+                    context.read<UserBloc>().add(const FetchUser());
+                    context.read<MovieBloc>().add(const FetchFavoriteMovies());
+
+                    return _refreshCompleter!.future;
+                  },
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                      child: Column(
+                        children: [
+                          BlocBuilder<UserBloc, UserState>(
+                            buildWhen: (state, previous) =>
+                                state.userResponse.status !=
+                                previous.userResponse.status,
+                            builder: (context, state) {
+                              if (!state.userResponse.status.isSuccess &&
+                                  state.userResponse.data == null) {
+                                return const SizedBox(
+                                  height: 200,
+                                  child: Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
+                                );
+                              }
+                              return _buildUserInfoCard(state, context);
+                            },
+                          ),
+                          BlocBuilder<MovieBloc, MovieState>(
+                            buildWhen: (state, previous) =>
+                                state.favoriteMoviesResponse.status !=
+                                previous.favoriteMoviesResponse.status,
+                            builder: (context, state) {
+                              if (!state.favoriteMoviesResponse.status.isSuccess &&
+                                  state.favoriteMoviesResponse.data == null) {
+                                return const SizedBox(
+                                  height: 200,
+                                  child: Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
+                                );
+                              }
+                              return _buildFavoritesMoviesSection(context);
+                            },
+                          ),
+                          const SizedBox(height: 100), // Extra space for Android
+                        ],
+                      ),
+                    ),
+                  ),
+                );
         },
       ),
     );
