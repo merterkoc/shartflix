@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/bloc/user/user_bloc.dart';
-import 'package:shartflix/core/extensions/context_ext.dart';
 import 'package:shartflix/core/settings/settings_controller.dart';
-import 'package:shartflix/core/widget/button/app_button.dart';
+import 'package:shartflix/feature/home/view/movies_view.dart';
 import 'package:shartflix/feature/home/view/profile_view.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
@@ -30,7 +30,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final settings = GetIt.instance<SettingsController>();
     final pages = <Widget>[
-      Center(child: Text(context.l10n.home_view_title, style: const TextStyle(fontSize: 24))),
+      const MoviesView(),
       const ProfileView(),
     ];
     return Scaffold(
