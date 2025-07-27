@@ -89,14 +89,14 @@ class AppRouter {
             name: AppRoute.home.name,
             pageBuilder: (context, state) => MaterialPage(
               name: state.name,
-                              child: BlocProvider(
-                  create: (context) => MovieBloc(MovieRepository())
-                    ..add(
-                      const FetchFavoriteMovies(),
-                    )
-                    ..add(const FetchMovies(page: 1)),
-                  child: const HomeView(),
-                ),
+              child: BlocProvider(
+                create: (context) => MovieBloc(MovieRepository())
+                  ..add(
+                    const FetchFavoriteMovies(),
+                  )
+                  ..add(const FetchMovies()),
+                child: const HomeView(),
+              ),
             ),
             redirect: (context, state) {
               final userState = context.read<UserBloc>().state;

@@ -10,7 +10,9 @@ class MovieRepository extends IRepository {
     CancelToken? cancelToken,
   }) async {
     return _userApi.getMovies(
-      cancelToken: cancelToken,
+      page: page,
+      cancelToken: cancelToken
+
     );
   }
 

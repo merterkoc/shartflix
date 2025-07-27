@@ -45,14 +45,18 @@ class MovieApi extends ApiProvider {
   }
 
   Future<ResponseEntity<dynamic>> getMovies({
+    required int page,
     CancelToken? cancelToken,
   }) async {
     final response = await get(
       resource: 'list',
+      queryParameters: {
+        'page': page,
+      },
       cancelToken: cancelToken,
     );
 
-    if( response.statusCode == 404) {
+    if (response.statusCode == 404) {
       return ResponseEntity.success(
         statusCode: response.statusCode,
         data: [],

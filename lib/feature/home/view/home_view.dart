@@ -76,8 +76,9 @@ class _HomeViewState extends State<HomeView> {
               ],
             )
           : null,
-      body: SafeArea(
-        child: pages[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: pages,
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
