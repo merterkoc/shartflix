@@ -23,3 +23,14 @@ class FetchFavoriteMovies extends MovieEvent {
   @override
   List<Object?> get props => [];
 }
+
+class FavoriteMovie extends MovieEvent {
+  const FavoriteMovie({
+    required this.favoriteId,
+  });
+
+  final String favoriteId;
+
+  @override
+  List<Object?> get props => [favoriteId];
+}

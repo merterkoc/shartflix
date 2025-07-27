@@ -11,7 +11,7 @@ class MoviesView extends StatefulWidget {
   State<MoviesView> createState() => _MoviesViewState();
 }
 
-class _MoviesViewState extends State<MoviesView>  {
+class _MoviesViewState extends State<MoviesView> {
   final PageController _scrollController = PageController();
   int _currentPage = 1;
   bool _isLoadingMore = false;
@@ -141,11 +141,8 @@ class _MoviesViewState extends State<MoviesView>  {
               return HomeMovieCard(
                 movie: movie,
                 onFavoritePressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${movie.title} favorilere eklendi!'),
-                      duration: const Duration(seconds: 2),
-                    ),
+                  context.read<MovieBloc>().add(
+                    FavoriteMovie(favoriteId: movie.id!),
                   );
                 },
               );
@@ -155,5 +152,4 @@ class _MoviesViewState extends State<MoviesView>  {
       },
     );
   }
-
 }

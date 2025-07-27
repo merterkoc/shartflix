@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shartflix/api/interface/i_api_provider.dart';
@@ -14,6 +15,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc(this.movieRepository) : super(MovieState.initial()) {
     on<FetchMovies>(_onFetchMovies);
     on<FetchFavoriteMovies>(_onFetchFavoriteMovies);
+    on<FavoriteMovie>(_onFavoriteMovie, transformer: sequential());
   }
 
   final MovieRepository movieRepository;
@@ -79,6 +81,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
           ),
         ),
       );
+      rethrow;
     }
   }
 
@@ -126,6 +129,61 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
           ),
         ),
       );
+      rethrow;
+    }
+  }
+
+  Future<void> _onFavoriteMovie(
+    FavoriteMovie event,
+    Emitter<MovieState> emit,
+  ) async {
+    final lastMovieResponse = state.moviesResponse;
+    final movieListData = lastMovieResponse.data;
+
+    if (movieListData?.movies == null) return;
+
+    final updatedMovies = movieListData!.movies!.map((movie) {
+      return movie.id == event.favoriteId
+          ? movie.copyWith(isFavorite: !movie.isFavorite!)
+          : movie;
+    }).toList();
+
+    emit(
+      state.copyWith(
+        moviesResponse: ResponseEntity.success(
+          data: movieListData.copyWith(
+            movies: updatedMovies,
+          ),
+        ),
+      ),
+    );
+
+    try {
+      final response = await movieRepository.favoriteMovie(
+        favoriteId: event.favoriteId,
+      );
+      if (response.isOk) {
+        add(const FetchFavoriteMovies());
+      } else {
+        emit(
+          state.copyWith(
+            moviesResponse: ResponseEntity<PaginationMovieDTO>.error(
+              data: lastMovieResponse.data,
+              statusCode: response.statusCode,
+            ),
+          ),
+        );
+      }
+    } on Exception {
+      emit(
+        state.copyWith(
+          moviesResponse: ResponseEntity<PaginationMovieDTO>.error(
+            data: lastMovieResponse.data,
+            statusCode: 200,
+          ),
+        ),
+      );
+      rethrow;
     }
   }
 }

@@ -36,15 +36,33 @@ class ShartflixApp extends StatelessWidget {
           final theme =
               themeMap[settingsController.themeStyle] ??
               const DefaultMaterialTheme();
+          ThemeData applyBackButtonIcon(ThemeData baseTheme) {
+            return baseTheme.copyWith(
+              actionIconTheme: ActionIconThemeData(
+                backButtonIconBuilder: (BuildContext context) => LogoBox(
+                  width: 222,
+                  height: 222,
+                  borderRadius: 9999,
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    size: 24,
+                  ),
+                ),
+              ),
+            );
+          }
 
           return MaterialApp.router(
             routerConfig: AppRouter().router,
             themeMode: settingsController.themeMode == Brightness.dark
                 ? ThemeMode.dark
                 : ThemeMode.light,
-            theme: settingsController.themeMode == Brightness.light
-                ? theme.light()
-                : theme.dark(),
+            theme: applyBackButtonIcon(
+              settingsController.themeMode == Brightness.light
+                  ? theme.light()!
+                  : theme.dark()!,
+            ),
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
