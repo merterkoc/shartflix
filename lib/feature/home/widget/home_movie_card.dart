@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/model/dto/movie/movie_dto.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
@@ -46,20 +48,15 @@ class _HomeMovieCardState extends State<HomeMovieCard>
     super.dispose();
   }
 
-  void _onFavoritePressed() {
-    setState(() {
-      _isFavorite = !_isFavorite;
-    });
-
-    if (_isFavorite) {
+  void _onFavoritePressed(bool isFavorite) {
+    if (isFavorite) {
       _animationController.forward();
     } else {
       _animationController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 300),
+        0,
+        duration: const Duration(milliseconds: 400),
       );
     }
-
     widget.onFavoritePressed();
   }
 
@@ -90,7 +87,6 @@ class _HomeMovieCardState extends State<HomeMovieCard>
           ),
         ),
 
-        // Gradient overlay for text readability
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -117,46 +113,63 @@ class _HomeMovieCardState extends State<HomeMovieCard>
               padding: const EdgeInsets.all(AppSpacing.paddingMedium),
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: SafeArea(
-                  child: _isFavorite
-                      ? LogoBox(
-                          onPressed: _onFavoritePressed,
-                          height: 60,
-                          width: 40,
-                          child: LottieBuilder.asset(
-                            'assets/lottie/heart.json',
-                            width: 60,
-                            height: 60,
-                            controller: _animationController,
-                            onLoaded: (composition) {
-                              _animationController.duration =
-                                  composition.duration;
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
+                child: BlocBuilder<MovieBloc, MovieState>(
+                  buildWhen: (previous, current) =>
+                      previous.moviesResponse.data!.movies !=
+                      current.moviesResponse.data!.movies,
+                  builder: (context, state) {
+                    final movie = state.moviesResponse.data!.movies!.firstWhere(
+                      (m) => m.id == widget.movie.id,
+                      orElse: () => widget.movie,
+                    );
+                    return SafeArea(
+                      child: movie.isFavorite!
+                          ? LogoBox(
+                              onPressed: () {
+                                _isFavorite = !_isFavorite;
+                                _onFavoritePressed(_isFavorite);
+                              },
+                              height: 60,
+                              width: 40,
+                              child: LottieBuilder.asset(
+                                'assets/lottie/heart.json',
                                 width: 60,
                                 height: 60,
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.8),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.favorite,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
-                              );
-                            },
-                            fit: BoxFit.contain,
-                          ),
-                        )
-                      : LogoBox(
-                          onPressed: _onFavoritePressed,
-                          icon: Icons.favorite,
-                          iconSize: 16,
-                          height: 60,
-                          width: 40,
-                        ),
+                                controller: _animationController,
+                                onLoaded: (composition) {
+                                  _animationController.duration =
+                                      composition.duration;
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withOpacity(0.8),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.favorite,
+                                      color: Colors.white,
+                                      size: 15,
+                                    ),
+                                  );
+                                },
+                                fit: BoxFit.contain,
+                              ),
+                            )
+                          : LogoBox(
+                              onPressed: () {
+                                _isFavorite = !_isFavorite;
+                                _onFavoritePressed(_isFavorite);
+                              },
+                              icon: Icons.favorite,
+                              iconSize: 16,
+                              height: 60,
+                              width: 40,
+                            ),
+                    );
+                  },
                 ),
               ),
             ),

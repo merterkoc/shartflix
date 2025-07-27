@@ -28,8 +28,8 @@ class AppButton extends StatelessWidget {
   final IconData? icon;
   final bool isLoading;
 
-  static const double _defaultHeight = 53.31;
-  static const double _radius = 18;
+  static const double _defaultHeight = 42;
+  static const double _radius = 14;
 
   @override
   Widget build(BuildContext context) {
