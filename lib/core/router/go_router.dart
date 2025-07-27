@@ -101,7 +101,8 @@ class AppRouter {
             redirect: (context, state) {
               final userState = context.read<UserBloc>().state;
               if (userState.userResponse.status.isSuccess &&
-                  userState.userResponse.data!.photoUrl.isEmpty) {
+                  (userState.userResponse.data!.photoUrl == null ||
+                      userState.userResponse.data!.photoUrl!.isEmpty)) {
                 return '/home/photo-upload';
               }
               return null;

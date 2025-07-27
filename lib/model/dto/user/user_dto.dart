@@ -11,7 +11,7 @@ abstract class UserDTO with _$UserDTO {
     required String id,
     required String name,
     required String email,
-    required String photoUrl,
+    String? photoUrl,
     String? token,
   }) = _UserDTO;
 

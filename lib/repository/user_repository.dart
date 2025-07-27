@@ -49,8 +49,8 @@ class UserRepository extends IRepository {
     );
   }
 
-  void setToken(OAuth2Token token) {
-    _userApi.setToken(token);
+  Future<void> setToken(OAuth2Token token) async {
+    await _userApi.setToken(token);
   }
 
   void logout({
