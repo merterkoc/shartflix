@@ -59,7 +59,6 @@ class _ProfileViewState extends State<ProfileView> {
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
             slivers: [
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
@@ -210,41 +209,40 @@ class _ProfileViewState extends State<ProfileView> {
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.only(top: 24),
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  context.l10n.profile_view_favorites_label,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.profile_view_favorites_label,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(height: 16),
-                if (state.favoriteMoviesResponse.data?.isEmpty ?? true)
-                  Text(
-                    context.l10n.profile_view_favorites_empty,
-                  )
-                else
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.5,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
-                    itemCount: state.favoriteMoviesResponse.data?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final movie = state.favoriteMoviesResponse.data![index];
-                      return MovieCard(
-                        movie: movie,
-                      );
-                    },
-                  ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              if (state.favoriteMoviesResponse.data?.isEmpty ?? true)
+                Text(
+                  context.l10n.profile_view_favorites_empty,
+                )
+              else
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.5,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                      ),
+                  itemCount: state.favoriteMoviesResponse.data?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final movie = state.favoriteMoviesResponse.data![index];
+                    return MovieCard(
+                      movie: movie,
+                    );
+                  },
+                ),
+            ],
           ),
         );
       },

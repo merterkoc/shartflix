@@ -69,18 +69,18 @@ class _MoviesViewState extends State<MoviesView> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Error loading movies',
+                  context.l10n.movie_loading_error,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  state.moviesResponse.message ?? 'Unknown error',
+                  state.moviesResponse.message ?? context.l10n.error_unknown,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 AppButton.primary(
-                  text: 'Retry',
+                  text: context.l10n.retry_button_label,
                   onPressed: () {
                     _currentPage = 1;
                     context.read<MovieBloc>().add(const FetchMovies());
