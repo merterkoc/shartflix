@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shartflix/bloc/movie/movie_bloc.dart';
-import 'package:shartflix/feature/home/widget/movie_card.dart';
+import 'package:shartflix/feature/home/widget/home_movie_card.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class MoviesView extends StatefulWidget {
@@ -11,7 +11,7 @@ class MoviesView extends StatefulWidget {
   State<MoviesView> createState() => _MoviesViewState();
 }
 
-class _MoviesViewState extends State<MoviesView> {
+class _MoviesViewState extends State<MoviesView>  {
   final PageController _scrollController = PageController();
   int _currentPage = 1;
   bool _isLoadingMore = false;
@@ -20,8 +20,6 @@ class _MoviesViewState extends State<MoviesView> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    // Load initial movies
-    context.read<MovieBloc>().add(const FetchMovies(page: 1));
   }
 
   @override
@@ -30,9 +28,7 @@ class _MoviesViewState extends State<MoviesView> {
     super.dispose();
   }
 
-  void _onScroll() {
-    // PageView doesn't use this scroll listener, pagination is handled in onPageChanged
-  }
+  void _onScroll() {}
 
   void _loadMoreMovies() {
     if (!_isLoadingMore) {
@@ -87,7 +83,7 @@ class _MoviesViewState extends State<MoviesView> {
                   text: 'Retry',
                   onPressed: () {
                     _currentPage = 1;
-                    context.read<MovieBloc>().add(const FetchMovies(page: 1));
+                    context.read<MovieBloc>().add(const FetchMovies());
                   },
                 ),
               ],
@@ -123,7 +119,7 @@ class _MoviesViewState extends State<MoviesView> {
         return RefreshIndicator.adaptive(
           onRefresh: () async {
             _currentPage = 1;
-            context.read<MovieBloc>().add(const FetchMovies(page: 1));
+            context.read<MovieBloc>().add(const FetchMovies());
           },
           child: PageView.builder(
             controller: _scrollController,
@@ -140,11 +136,18 @@ class _MoviesViewState extends State<MoviesView> {
                   child: CircularProgressIndicator.adaptive(),
                 );
               }
-              
+
               final movie = movies[index];
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: MovieCard(movie: movie),
+              return HomeMovieCard(
+                movie: movie,
+                onFavoritePressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${movie.title} favorilere eklendi!'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
               );
             },
           ),
@@ -152,4 +155,5 @@ class _MoviesViewState extends State<MoviesView> {
       },
     );
   }
-} 
+
+}

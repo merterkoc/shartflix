@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shartflix/api/interface/i_api_provider.dart';
 import 'package:shartflix/model/dto/movie/movie_dto.dart';
-import 'package:shartflix/model/dto/pagination/pagination_dto.dart';
 import 'package:shartflix/model/dto/pagination_movie/pagination_movie_dto.dart';
 import 'package:shartflix/repository/movie_repository.dart';
 
@@ -23,7 +22,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     FetchMovies event,
     Emitter<MovieState> emit,
   ) async {
-    // If it's the first page, show loading state
     if (event.page == 1) {
       emit(
         state.copyWith(

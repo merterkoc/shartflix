@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/bloc/user/user_bloc.dart';
-import 'package:shartflix/core/extensions/context_ext.dart';
 import 'package:shartflix/core/router/go_router.dart';
 import 'package:shartflix/feature/home/widget/movie_card.dart';
 import 'package:shartflix/ui/app_ui.dart';
@@ -20,8 +19,31 @@ class ProfileView extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.paddingSmall),
             child: Column(
               children: [
-                _buildUserInfoCard(state, context),
-                _buildFavoritesMoviesSection(context),
+                BlocBuilder<UserBloc, UserState>(
+                  buildWhen: (state, previous) =>
+                      state.userResponse.status != previous.userResponse.status,
+                  builder: (context, state) {
+                    if (!state.userResponse.status.isSuccess) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    return _buildUserInfoCard(state, context);
+                  },
+                ),
+                BlocBuilder<MovieBloc, MovieState>(
+                  buildWhen: (state, previous) =>
+                      state.favoriteMoviesResponse.status !=
+                      previous.favoriteMoviesResponse.status,
+                  builder: (context, state) {
+                    if (!state.favoriteMoviesResponse.status.isSuccess) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    return _buildFavoritesMoviesSection(context);
+                  },
+                ),
               ],
             ),
           ),

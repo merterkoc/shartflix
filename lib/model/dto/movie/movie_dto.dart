@@ -28,6 +28,7 @@ abstract class MovieDTO with _$MovieDTO {
     @JsonKey(name: 'imdbVotes') String? imdbVotes,
     @JsonKey(name: 'imdbID') String? imdbID,
     @JsonKey(name: 'Type') String? type,
+    bool? isFavorite,
     @Default(false) bool response,
     @Default([]) List<String> images,
   }) = _MovieDTO;
