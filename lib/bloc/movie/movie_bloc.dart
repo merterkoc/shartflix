@@ -91,7 +91,9 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   ) async {
     emit(
       state.copyWith(
-        favoriteMoviesResponse: ResponseEntity<List<MovieDTO>>.loading(),
+        favoriteMoviesResponse: ResponseEntity<List<MovieDTO>>.loading(
+          data: state.favoriteMoviesResponse.data,
+        ),
       ),
     );
 

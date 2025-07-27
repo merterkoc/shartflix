@@ -45,7 +45,7 @@ class AppButton extends StatelessWidget {
       child = SizedBox(
         width: 24,
         height: 24,
-        child: CircularProgressIndicator(
+        child: CircularProgressIndicator.adaptive(
           strokeWidth: 2.5,
           valueColor: AlwaysStoppedAnimation<Color>(
             outlined ? brandColor : Colors.white,

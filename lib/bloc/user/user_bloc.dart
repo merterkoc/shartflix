@@ -29,7 +29,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   ) async {
     emit(
       state.copyWith(
-        userResponse: ResponseEntity<UserDTO>.loading(),
+        userResponse: ResponseEntity<UserDTO>.loading(
+          data: state.userResponse.data,
+        ),
       ),
     );
 
