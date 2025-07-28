@@ -15,7 +15,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc(this.movieRepository) : super(MovieState.initial()) {
     on<FetchMovies>(_onFetchMovies);
     on<FetchFavoriteMovies>(_onFetchFavoriteMovies);
-    on<FavoriteMovie>(_onFavoriteMovie, transformer: sequential());
+    on<FavoriteMovie>(_onFavoriteMovie, transformer: droppable());
   }
 
   final MovieRepository movieRepository;
