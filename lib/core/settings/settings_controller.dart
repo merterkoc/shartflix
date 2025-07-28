@@ -15,7 +15,7 @@ class SettingsController with ChangeNotifier {
 
   int get themeStyle => _themeStyle;
 
-  Future<void>  loadSettings() async {
+  Future<void> loadSettings() async {
     _themeMode = await _settingsService.themeMode();
     _themeStyle = await _settingsService.themeStyle();
 

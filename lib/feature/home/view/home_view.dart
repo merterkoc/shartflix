@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/bloc/user/user_bloc.dart';
 import 'package:shartflix/core/settings/settings_controller.dart';
-import 'package:shartflix/feature/home/view/movies_view.dart';
-import 'package:shartflix/feature/home/view/profile_view.dart';
+import 'package:shartflix/feature/home/tabs/movies_tab.dart';
+import 'package:shartflix/feature/home/tabs/profile_tab.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
 class HomeView extends StatefulWidget {
@@ -30,8 +29,8 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final settings = GetIt.instance<SettingsController>();
     final pages = <Widget>[
-      const MoviesView(),
-      const ProfileView(),
+      const MoviesTab(),
+      const ProfileTab(),
     ];
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

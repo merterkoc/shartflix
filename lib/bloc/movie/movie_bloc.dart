@@ -46,7 +46,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
           paginationMovieDTO.movies!.map((item) => item),
         ).toList();
 
-        // If it's the first page, replace movies, otherwise append
         final currentMovies = state.moviesResponse.data?.movies ?? <MovieDTO>[];
         final updatedMovies = event.page == 1
             ? newMovies

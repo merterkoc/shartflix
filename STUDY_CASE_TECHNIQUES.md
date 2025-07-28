@@ -399,7 +399,7 @@ Scroll view'ın her durumda çalışmasını sağlamak ve nested scroll view sor
 ### Implementasyon
 
 ```dart
-// lib/feature/home/view/profile_view.dart
+// lib/feature/home/view/profile_tab.dart
 return CustomScrollView(
   physics: const BouncingScrollPhysics(),
   slivers: [

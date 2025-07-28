@@ -4,14 +4,14 @@ import 'package:shartflix/bloc/movie/movie_bloc.dart';
 import 'package:shartflix/feature/home/widget/home_movie_card.dart';
 import 'package:shartflix/ui/app_ui.dart';
 
-class MoviesView extends StatefulWidget {
-  const MoviesView({super.key});
+class MoviesTab extends StatefulWidget {
+  const MoviesTab({super.key});
 
   @override
-  State<MoviesView> createState() => _MoviesViewState();
+  State<MoviesTab> createState() => _MoviesTabState();
 }
 
-class _MoviesViewState extends State<MoviesView> {
+class _MoviesTabState extends State<MoviesTab> {
   final PageController _scrollController = PageController();
   int _currentPage = 1;
   bool _isLoadingMore = false;

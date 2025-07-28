@@ -227,8 +227,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Future<File> _compressImage(File originalFile) async {
     try {
       final compressedBytes = await _compressImageInIsolate(originalFile);
-
-      // Create a temporary file for the compressed image
       final tempPath = '${originalFile.path}_compressed.jpg';
       final compressedFile = File(tempPath);
       await compressedFile.writeAsBytes(compressedBytes);

@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:shartflix/core/form_validation/email_input.dart';
 import 'package:shartflix/core/form_validation/login_password_input.dart';
-import 'package:shartflix/core/form_validation/password_input.dart';
 
 part 'login_validation_event.dart';
 

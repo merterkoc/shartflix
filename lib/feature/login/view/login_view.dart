@@ -53,7 +53,7 @@ class _LoginViewState extends State<LoginView> {
                   errorMessage = context.l10n.login_view_error_unknown;
                 case LoginFailure.invalidCredentials:
                   errorMessage = context.l10n.login_view_error_message;
-                }
+              }
               showAppErrorBottomSheet(
                 context: context,
                 title: context.l10n.login_view_error_title,
