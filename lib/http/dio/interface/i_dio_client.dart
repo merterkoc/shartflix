@@ -205,7 +205,7 @@ abstract class IDioClient {
           ? (data as Map<String, dynamic>)['response']
           : data;
       final message = dataResponse is Map<String, dynamic>
-          ? ((dataResponse['response'] as Map<String, dynamic>)['message']??
+          ? ((dataResponse['response'] as Map<String, dynamic>)['message'] ??
                 dataResponse['error'] ??
                 'UNKNOWN_ERROR')
           : 'UNKNOWN_ERROR';

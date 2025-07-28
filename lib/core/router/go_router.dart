@@ -13,7 +13,6 @@ import 'package:shartflix/feature/upload_photo/view/upload_photo_view.dart';
 import 'package:shartflix/http/dio/token_storage/token_storage.dart';
 import 'package:shartflix/repository/movie_repository.dart';
 
-/// Rooter Navigator Key
 final GlobalKey<NavigatorState> rooterNavigatorKey =
     GlobalKey<NavigatorState>();
 
@@ -22,7 +21,6 @@ final GlobalKey<NavigatorState> _shellNavigatorKey =
 
 final GoRouter goRouter = AppRouter().router;
 
-/// Register the RouteObserver as a navigation observer.
 final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 

@@ -8,6 +8,5 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await BootService.initialize();
   FlutterNativeSplash.remove();
-  
   runApp(const ShartflixApp());
 }

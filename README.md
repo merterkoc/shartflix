@@ -39,9 +39,11 @@ Before running the app, you need to set up environment variables:
 
 ### 1. Automatic Asset Scaling (asset_resizer.dart)
 
-To automatically generate asset files for different resolutions (1.5x, 2.0x, 3.0x, 4.0x), use the `asset_resizer.dart` script.
+To automatically generate asset files for different resolutions (1.5x, 2.0x, 3.0x, 4.0x), use the
+`asset_resizer.dart` script.
 
 #### Usage:
+
 1. Add your original image(s) to the `assets/images/` folder (e.g., `logo.png`).
 2. Install dependencies:
    ```sh
@@ -51,7 +53,8 @@ To automatically generate asset files for different resolutions (1.5x, 2.0x, 3.0
    ```sh
    dart run asset_resizer.dart
    ```
-4. The script will automatically generate resized images in `assets/images/1.5x/`, `2.0x/`, `3.0x/`, and `4.0x/` folders.
+4. The script will automatically generate resized images in `assets/images/1.5x/`, `2.0x/`, `3.0x/`,
+   and `4.0x/` folders.
 
 > **Note:** You can adjust the scales in the `scales` constant inside `asset_resizer.dart`.
 
@@ -59,9 +62,11 @@ To automatically generate asset files for different resolutions (1.5x, 2.0x, 3.0
 
 ### 2. Asset & Font Automation (flutter_gen & build_runner)
 
-Use [flutter_gen](https://pub.dev/packages/flutter_gen) to safely and automatically generate Dart code for your asset and font paths.
+Use [flutter_gen](https://pub.dev/packages/flutter_gen) to safely and automatically generate Dart
+code for your asset and font paths.
 
 #### Setup & Usage:
+
 1. Make sure your `pubspec.yaml` includes the following:
    ```yaml
    dev_dependencies:
@@ -91,7 +96,9 @@ Use [flutter_gen](https://pub.dev/packages/flutter_gen) to safely and automatica
 ---
 
 ### Extra Notes
-- After adding or removing assets, it is recommended to re-run both the `asset_resizer.dart` script and the build_runner command.
+
+- After adding or removing assets, it is recommended to re-run both the `asset_resizer.dart` script
+  and the build_runner command.
 - This automation eliminates typos in asset paths and provides autocomplete support in your IDE.
 
 ---

@@ -26,7 +26,7 @@ class MovieApi extends ApiProvider {
     if (response.statusCode == 404) {
       return ResponseEntity.success(
         statusCode: response.statusCode,
-        data: [],
+        data: const [],
       );
     } else if (response.statusCode != 200) {
       return ResponseEntity.error(
@@ -34,7 +34,8 @@ class MovieApi extends ApiProvider {
         message: 'Failed to fetch favorite movies',
       );
     }
-    final favoriteMovies = (response.data['data'] as List)
+    final data = response.data as Map<String, dynamic>;
+    final favoriteMovies = (data['data'] as List)
         .map((e) => e as Map<String, dynamic>)
         .toList();
 
@@ -59,7 +60,7 @@ class MovieApi extends ApiProvider {
     if (response.statusCode == 404) {
       return ResponseEntity.success(
         statusCode: response.statusCode,
-        data: [],
+        data: const <dynamic>[],
       );
     }
 

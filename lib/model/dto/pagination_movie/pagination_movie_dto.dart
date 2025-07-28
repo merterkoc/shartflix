@@ -17,4 +17,3 @@ abstract class PaginationMovieDTO with _$PaginationMovieDTO {
   factory PaginationMovieDTO.fromJson(Map<String, dynamic> json) =>
       _$PaginationMovieDTOFromJson(json);
 }
-

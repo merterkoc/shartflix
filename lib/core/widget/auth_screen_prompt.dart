@@ -26,9 +26,10 @@ class AuthScreenPrompt extends StatelessWidget {
       alignment: WrapAlignment.center,
       children: [
         Text(
-          promptText ?? (isRegister
-              ? context.l10n.register_view_login_prompt
-              : context.l10n.login_view_register_prompt),
+          promptText ??
+              (isRegister
+                  ? context.l10n.register_view_login_prompt
+                  : context.l10n.login_view_register_prompt),
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w400,
@@ -47,9 +48,10 @@ class AuthScreenPrompt extends StatelessWidget {
             }
           },
           child: Text(
-            actionText ?? (isRegister
-                ? context.l10n.register_view_login_button
-                : context.l10n.login_view_register_button),
+            actionText ??
+                (isRegister
+                    ? context.l10n.register_view_login_button
+                    : context.l10n.login_view_register_button),
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,

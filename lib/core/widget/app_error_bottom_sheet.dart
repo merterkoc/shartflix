@@ -2,11 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:shartflix/core/extensions/context_ext.dart';
 import 'package:shartflix/core/widget/button/app_button.dart';
 
-class AppErrorBottomSheet extends StatelessWidget {
-  const AppErrorBottomSheet({
+Future<void> showAppErrorBottomSheet({
+  required BuildContext context,
+  required String title,
+  required String message,
+  IconData? icon,
+  VoidCallback? onAction,
+  String? actionLabel,
+}) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (context) => _AppErrorBottomSheet(
+      title: title,
+      message: message,
+      icon: icon,
+      onAction: onAction,
+      actionLabel: actionLabel,
+    ),
+  );
+}
+
+class _AppErrorBottomSheet extends StatelessWidget {
+  const _AppErrorBottomSheet({
     required this.title,
     required this.message,
-    super.key,
     this.icon,
     this.onAction,
     this.actionLabel,
@@ -28,7 +51,6 @@ class AppErrorBottomSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Top divider
               Container(
                 width: 40,
                 height: 4,
@@ -77,28 +99,4 @@ class AppErrorBottomSheet extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> showAppErrorBottomSheet({
-  required BuildContext context,
-  required String title,
-  required String message,
-  IconData? icon,
-  VoidCallback? onAction,
-  String? actionLabel,
-}) {
-  return showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-    ),
-    builder: (context) => AppErrorBottomSheet(
-      title: title,
-      message: message,
-      icon: icon,
-      onAction: onAction,
-      actionLabel: actionLabel,
-    ),
-  );
 }

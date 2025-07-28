@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -36,7 +34,6 @@ class _HomeMovieCardState extends State<HomeMovieCard>
     );
     _isFavorite = widget.movie.isFavorite ?? false;
 
-    // If already favorited, set animation to end state
     if (_isFavorite) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _animationController.value = 1.0;
@@ -72,13 +69,13 @@ class _HomeMovieCardState extends State<HomeMovieCard>
           child: CachedNetworkImage(
             imageUrl: widget.movie.poster ?? '',
             fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
+            placeholder: (context, url) => ColoredBox(
               color: Theme.of(context).colorScheme.surface,
               child: const Center(
                 child: CircularProgressIndicator.adaptive(),
               ),
             ),
-            errorWidget: (context, url, error) => Container(
+            errorWidget: (context, url, error) => ColoredBox(
               color: Theme.of(context).colorScheme.surface,
               child: Center(
                 child: Icon(
@@ -101,8 +98,12 @@ class _HomeMovieCardState extends State<HomeMovieCard>
                   colors: [
                     Colors.transparent,
                     Colors.transparent,
-                    Theme.of(context).colorScheme.surface.withOpacity(0.6),
-                    Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                    Theme.of(
+                      context,
+                    ).colorScheme.surface.withValues(alpha: 0.6),
+                    Theme.of(
+                      context,
+                    ).colorScheme.surface.withValues(alpha: 0.9),
                   ],
                   stops: const [0.0, 0.6, 0.8, 1.0],
                 ),
@@ -118,9 +119,13 @@ class _HomeMovieCardState extends State<HomeMovieCard>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Theme.of(context).colorScheme.surface.withOpacity(0.1),
-                    Theme.of(context).colorScheme.surface.withOpacity(0.4),
-                    Theme.of(context).colorScheme.surface.withOpacity(1),
+                    Theme.of(
+                      context,
+                    ).colorScheme.surface.withValues(alpha: 0.1),
+                    Theme.of(
+                      context,
+                    ).colorScheme.surface.withValues(alpha: 0.4),
+                    Theme.of(context).colorScheme.surface.withValues(alpha: 1),
                   ],
                   stops: const [0.0, 0.6, 0.8, 1.0],
                 ),
@@ -168,7 +173,7 @@ class _HomeMovieCardState extends State<HomeMovieCard>
                                     width: 60,
                                     height: 60,
                                     decoration: BoxDecoration(
-                                      color: Colors.red.withOpacity(0.8),
+                                      color: Colors.red.withValues(alpha: 0.8),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -278,7 +283,6 @@ class _HomeMovieCardState extends State<HomeMovieCard>
 
                   const SizedBox(height: 12),
 
-                  // Movie plot
                   if (widget.movie.plot != null &&
                       widget.movie.plot!.isNotEmpty) ...[
                     Text(

@@ -9,7 +9,7 @@ class Shared {
 
   static late SharedPreferences _preferences;
 
-   Future<void> init() async {
+  Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
   }
 

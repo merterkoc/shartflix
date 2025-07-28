@@ -35,7 +35,6 @@ class RegisterForm extends StatelessWidget {
       builder: (context, formState) {
         return Column(
           children: [
-            // Name Field
             RegisterFormField(
               controller: nameController,
               hintText: context.l10n.register_view_name_hint,
@@ -59,7 +58,6 @@ class RegisterForm extends StatelessWidget {
                   !formState.name.isPure,
             ),
             const SizedBox(height: 16),
-            // Email Field
             RegisterFormField(
               controller: emailController,
               hintText: context.l10n.register_view_email_hint,
@@ -92,7 +90,6 @@ class RegisterForm extends StatelessWidget {
                       !formState.email.isPure),
             ),
             const SizedBox(height: 16),
-            // Password Field
             RegisterFormField(
               controller: passwordController,
               hintText: context.l10n.register_view_password_hint,
@@ -130,7 +127,6 @@ class RegisterForm extends StatelessWidget {
                       !formState.password.isPure),
             ),
             const SizedBox(height: 16),
-            // Confirm Password Field
             RegisterFormField(
               controller: confirmPasswordController,
               hintText: context.l10n.register_view_confirm_password_hint,

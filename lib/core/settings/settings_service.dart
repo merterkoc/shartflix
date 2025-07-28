@@ -36,7 +36,6 @@ class SettingsService {
     await Shared().setInt('themeStyle', themeStyle);
   }
 
-  /// Persists the user's preferred ThemeMode to local or remote storage.
   Future<void> updateThemeMode(Brightness theme) async {
     await Shared().setInt('theme', theme.index);
   }
