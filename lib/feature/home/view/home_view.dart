@@ -22,6 +22,16 @@ class _HomeViewState extends State<HomeView> {
     if (context.read<UserBloc>().state.userResponse.status.isInitialized) {
       context.read<UserBloc>().add(const FetchUser());
     }
+    /// Bu kod, IMDB'den alınan görsellerin çoğunun 403 hatası vermesi nedeniyle
+    /// uyarı mesajı göstermek için kullanıldı proje ile ilgisi yoktur.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAppErrorBottomSheet(
+        context: context,
+        message:
+            'IMDBden alınan görsellerin çoğu 403 hatası veriyor. Bu yüzden görselleri gösteremiyoruz.',
+        title: 'Bağımsız Bilgilendirme',
+      );
+    });
     super.initState();
   }
 
