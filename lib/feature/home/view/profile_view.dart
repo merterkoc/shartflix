@@ -69,7 +69,9 @@ class _ProfileViewState extends State<ProfileView> {
                         _isFavoritesLoaded = false;
 
                         context.read<UserBloc>().add(const FetchUser());
-                        context.read<MovieBloc>().add(const FetchFavoriteMovies());
+                        context.read<MovieBloc>().add(
+                          const FetchFavoriteMovies(),
+                        );
 
                         return _refreshCompleter!.future;
                       },
@@ -100,7 +102,10 @@ class _ProfileViewState extends State<ProfileView> {
                                 state.favoriteMoviesResponse.status !=
                                 previous.favoriteMoviesResponse.status,
                             builder: (context, state) {
-                              if (!state.favoriteMoviesResponse.status.isSuccess &&
+                              if (!state
+                                      .favoriteMoviesResponse
+                                      .status
+                                      .isSuccess &&
                                   state.favoriteMoviesResponse.data == null) {
                                 return const SizedBox(
                                   height: 200,
@@ -160,7 +165,10 @@ class _ProfileViewState extends State<ProfileView> {
                                 state.favoriteMoviesResponse.status !=
                                 previous.favoriteMoviesResponse.status,
                             builder: (context, state) {
-                              if (!state.favoriteMoviesResponse.status.isSuccess &&
+                              if (!state
+                                      .favoriteMoviesResponse
+                                      .status
+                                      .isSuccess &&
                                   state.favoriteMoviesResponse.data == null) {
                                 return const SizedBox(
                                   height: 200,
@@ -172,7 +180,9 @@ class _ProfileViewState extends State<ProfileView> {
                               return _buildFavoritesMoviesSection(context);
                             },
                           ),
-                          const SizedBox(height: 100), // Extra space for Android
+                          const SizedBox(
+                            height: 100,
+                          ), // Extra space for Android
                         ],
                       ),
                     ),
@@ -290,13 +300,12 @@ class _ProfileViewState extends State<ProfileView> {
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.5,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.5,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                  ),
                   itemCount: state.favoriteMoviesResponse.data?.length ?? 0,
                   itemBuilder: (context, index) {
                     final movie = state.favoriteMoviesResponse.data![index];
