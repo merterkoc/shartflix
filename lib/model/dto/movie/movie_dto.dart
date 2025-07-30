@@ -22,7 +22,7 @@ abstract class MovieDTO with _$MovieDTO {
     @JsonKey(name: 'Language') String? language,
     @JsonKey(name: 'Country') String? country,
     @JsonKey(name: 'Awards') String? awards,
-    @JsonKey(name: 'Poster') String? poster,
+    @JsonKey(name: 'Poster', fromJson: _httpToHttps) String? poster,
     @JsonKey(name: 'Ratings') String? metascore,
     @JsonKey(name: 'imdbRating') String? imdbRating,
     @JsonKey(name: 'imdbVotes') String? imdbVotes,
@@ -35,4 +35,12 @@ abstract class MovieDTO with _$MovieDTO {
 
   factory MovieDTO.fromJson(Map<String, dynamic> json) =>
       _$MovieDTOFromJson(json);
+}
+
+String _httpToHttps(String? url) {
+  if (url == null) return '';
+  if (url.startsWith('http://')) {
+    return url.replaceFirst('http://', 'https://');
+  }
+  return url;
 }
