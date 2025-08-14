@@ -2,6 +2,8 @@
 
 Shartflix is a movie app.
 
+To learn more about the technologies and implementation techniques used in this project, see [Study Case Techniques](STUDY_CASE_TECHNIQUES.md).
+
 ## Getting Started
 
 1. Install Flutter: https://docs.flutter.dev/get-started/install
